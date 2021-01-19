@@ -1,10 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import "@material-ui/core/styles";
+import Head from 'next/head';
+import GlobalStyle from '../components/style/global';
+import 'antd/dist/antd.css';
 
 const App = ({ Component}) => {
     return (
-        <Component />
+        <>
+            <Head>
+                <meta charSet="utf-8" />
+                <title>my day</title>
+            </Head>
+            <Component />
+            <GlobalStyle />
+        </>
     )
 }
 
