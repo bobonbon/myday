@@ -1,13 +1,14 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
+import { useDispatch, useSelector } from 'react-redux';
+
 import { Menu, Input, Row, Col, Button, Dropdown } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 
-import UserProfile from './UserProfile';
 import LoginForm from './LoginForm';
-
+import { logoutAction } from '../reducers/user';
 
 const GnbWrapper = styled.div`
     width: 100%; 
@@ -24,10 +25,11 @@ const HeaderItem = styled.li`
 
 
 const AppLayout = ({ children }) => {
-    const [isLoggedIn, setIsLoggedIn] = useState();
-    
+    const { isLoggedIn } = useSelector((state) => state.user);
+    const dispatch = useDispatch();
+
     const onLogout = useCallback(() => {
-        setIsLoggedIn(false);
+        dispatch(logoutAction());
         console.log('logout in AppLayout');
     }, []);
 
@@ -101,7 +103,7 @@ const AppLayout = ({ children }) => {
                         ? <div>로그인 됨!!</div>
                         : (
                             <Col xs={24} md={6}>
-                                <LoginForm setIsLoggedIn={setIsLoggedIn} />
+                                <LoginForm />
                             </Col>
                         )
                     }
