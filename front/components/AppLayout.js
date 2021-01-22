@@ -7,6 +7,7 @@ import { Menu, Input, Row, Col, Button, Dropdown } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 
+import PostForm from './PostForm';
 import LoginForm from './LoginForm';
 import { logoutAction } from '../reducers/user';
 
@@ -87,26 +88,15 @@ const AppLayout = ({ children }) => {
             </GnbWrapper>
             <div className="wrapper">
                 <Row>
-                    {isLoggedIn
-                        ? (
-                            <Col xs={24} md={24}>
-                                {children}
-                            </Col>
-                        )
-                        : (
-                            <Col xs={24} md={18}>
-                                {children}
-                            </Col>
-                        )
-                    }
-                    {isLoggedIn
-                        ? <div>로그인 됨!!</div>
-                        : (
-                            <Col xs={24} md={6}>
-                                <LoginForm />
-                            </Col>
-                        )
-                    }
+                    <Col xs={24} md={16}>
+                        {children}
+                    </Col>
+                    <Col xs={24} md={8}>
+                        {isLoggedIn
+                            ? <PostForm />
+                            : <LoginForm />
+                        } 
+                    </Col>
                 </Row>
             </div>
             

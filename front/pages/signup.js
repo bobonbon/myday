@@ -5,17 +5,7 @@ import { Form, Input, Checkbox, Button } from 'antd';
 import AppLayout from '../components/AppLayout';
 import useInput from '../hooks/useInput';
 
-const FormGutter = styled.div`
-    margin-top: 10px;
-
-    & a {
-        margin-left: 10px;
-    }
-
-    & label {
-        color: #b3b3b3;
-    }
-`;
+import { FormGutter } from '../components/style/global';
 
 const ErrorMessage = styled.div`
     color: red;
