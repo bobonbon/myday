@@ -7,7 +7,7 @@ import { Card, Avatar, Button, Row, Col, Modal, Menu } from 'antd';
 import { EllipsisOutlined, HeartFilled, HeartOutlined, MessageOutlined } from '@ant-design/icons'
 
 import DetailPost from './DetailPost';
-import ImagesView from './ImagesView';
+import ImagesView from './imagesView';
 import CommentForm from './CommentForm';
 
 import { FormGutter, CardWrapper, CardTop } from './style/global';
@@ -25,7 +25,7 @@ const CardButton = styled(Button)`
     }
 `;
 
-const PostCard = ({ post }) => {
+const PostCard = ({ post, images }) => {
     const id = useSelector((state) => state.user.me?.id);
     //const id = me?.id;   // === me && me.id;    optional chaning
 
@@ -120,7 +120,7 @@ const PostCard = ({ post }) => {
                     <CommentForm post={post} />
                 </FormGutter>
             </CardWrapper>
-            {openDetailPost && <DetailPost post={post} onCloseDetailPost={onCloseDetailPost} />}
+            {openDetailPost && <DetailPost post={post} images={post.Images} onCloseDetailPost={onCloseDetailPost} />}
         </>
     )
 }

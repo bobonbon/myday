@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Row, Col, Avatar, Layout, List, Comment } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 
-import ImagesView from './ImagesView';
+import ImagesView from './imagesView';
 import CommentForm from './CommentForm';
 
 const DetailWrapper = styled.div`
@@ -59,7 +59,7 @@ const DetailColRight = styled(Col)`
     }
 `;
 
-const DetailPost = ({ post, onCloseDetailPost }) => {
+const DetailPost = ({ images, post, onCloseDetailPost }) => {
     const id = useSelector((state) => state.post.id);
     return (
         <DetailWrapper>
@@ -67,7 +67,7 @@ const DetailPost = ({ post, onCloseDetailPost }) => {
             <DetailCard>
                 <DetailRow>
                     <DetailColLeft xs={24} md={14}>
-                        <ImagesView />
+                        <ImagesView images={images} />
                     </DetailColLeft>
                     <DetailColRight xs={24} md={10}>
                         <div className="comment-wrapper">
