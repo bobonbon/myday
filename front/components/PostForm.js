@@ -1,29 +1,31 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Form, Input } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { FormGutter, FormPadding } from './style/global';
-import { addPost } from '../reducers/post';
 
+import { addPost } from '../reducers/post';
+import useInput from '../hooks/useInput';
 
 const PostForm = () => {
-    const { isLoggedIn } = useSelector((state) => state.user);
-    const { imagePaths } = useSelector((state) => state.post);
+    const dispatch = useDispatch();
+    const { imagePaths, addPostLoading, addPostDone } = useSelector((state) => state.post);
     
-    const [text, setText] = useState('')
-    const onChangeText = useCallback((e) => {
-        setText(e.target.value);
-    }, [text]);
+    const [text, onChangeText, setText] = useInput('');
+
+    useEffect(() => {
+        if (addPostDone) {
+            setText('');
+        }
+    }, [addPostDone]);
 
     const imageInput = useRef();
     const onClickImageUpload = useCallback(() => {
         imageInput.current.click();
     }, [imageInput.current]);
 
-    const dispatch = useDispatch();
     const onSubmit = useCallback(() => {
-        dispatch(addPost);
-        setText('');
-    }, []);
+        dispatch(addPost(text));
+    }, [text]);
 
     return (
         <>
@@ -32,7 +34,7 @@ const PostForm = () => {
                 <FormGutter>
                     <input type="file" multiple hidden ref={imageInput} />
                     <Button onClick={onClickImageUpload}>이미지 업로드</Button>
-                    <Button type="primary" style={{ float: 'right' }} htmlType="submit">작성</Button>
+                    <Button type="primary" style={{ float: 'right' }} htmlType="submit" loading={addPostLoading}>작성</Button>
                 </FormGutter>
                 <FormGutter>
                     {imagePaths.map((v) => (

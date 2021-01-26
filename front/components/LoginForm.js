@@ -1,10 +1,11 @@
 import React, { useCallback } from 'react';
-import { Form, Input, Button, Popover } from 'antd';
+import { Form, Input, Button } from 'antd';
 import Link from 'next/link';
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+
 import useInput from '../hooks/useInput';
-import { loginAction } from '../reducers/user';
+import { LOG_IN_REQUEST } from '../reducers/user';
 
 const FormPadding = styled(Form)`
     padding: 10px 20px;
@@ -24,27 +25,31 @@ const FormGutter = styled.div`
 
 const LoginForm = () => {
     const dispatch = useDispatch();
-    const [id, onChangeId] = useInput('');
+    const { logInLoading } = useSelector((state) => state.user);
+    const [email, onChangeEmail] = useInput('');
     const [password, onChangePassword] = useInput('');
 
     const onsubmitForm = useCallback(() => {
-        console.log(id, password);
-        dispatch(loginAction({ id, password }));
-    }, [id, password]);
+        console.log(email, password);
+        dispatch({
+            type: LOG_IN_REQUEST,
+            data: { email, password },
+        });
+    }, [email, password]);
 
     return(
         <>  
             <FormPadding onFinish={onsubmitForm}>
                 <FormGutter>
-                    <label htmlFor="userId">아이디</label><br/>
-                    <Input name="userId" value={id} onChange={onChangeId} required />
+                    <label htmlFor="user-email">이메일</label><br/>
+                    <Input name="user-email" value={email} onChange={onChangeEmail} required />
                 </FormGutter>
                 <FormGutter>
                     <label htmlFor="userPassword">비밀번호</label><br/>
                     <Input name="userPassword" value={password} onChange={onChangePassword} required />
                 </FormGutter>
                 <FormGutter>
-                    <Button type="primary" htmlType="submit" loading={false}>로그인</Button>
+                    <Button type="primary" htmlType="submit" loading={logInLoading}>로그인</Button>
                     <Link href="/signup">
                         <a>회원가입</a>
                     </Link>

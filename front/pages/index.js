@@ -8,7 +8,7 @@ import user from '../reducers/user';
 import post from '../reducers/post';
 
 const Home = () => {
-    const { isLoggedIn } = useSelector((state) => state.user);
+    const { me } = useSelector((state) => state.user);
     const { mainPosts } = useSelector((state) => state.post);
 
     return (

@@ -9,7 +9,7 @@ import styled from 'styled-components';
 
 import PostForm from './PostForm';
 import LoginForm from './LoginForm';
-import { logoutAction } from '../reducers/user';
+import { LOG_OUT_REQUEST } from '../reducers/user';
 
 const GnbWrapper = styled.div`
     width: 100%; 
@@ -26,12 +26,13 @@ const HeaderItem = styled.li`
 
 
 const AppLayout = ({ children }) => {
-    const { isLoggedIn } = useSelector((state) => state.user);
+    const { me, logOutLoading } = useSelector((state) => state.user);
     const dispatch = useDispatch();
 
     const onLogout = useCallback(() => {
-        dispatch(logoutAction());
-        console.log('logout in AppLayout');
+        dispatch({
+            type: LOG_OUT_REQUEST,
+        });
     }, []);
 
     return (
@@ -50,7 +51,7 @@ const AppLayout = ({ children }) => {
                             </HeaderItem>
                         </Col>
                         <Col span={8}>
-                            {isLoggedIn 
+                            {me 
                                 ? (
                                     <HeaderItem>
                                         <Dropdown  
@@ -65,7 +66,7 @@ const AppLayout = ({ children }) => {
                                                     </Menu.Item>
                                                     <Menu.Divider />
                                                     <Menu.Item>
-                                                        <Button onClick={onLogout}>로그아웃</Button>
+                                                        <Button onClick={onLogout} loading={logOutLoading}>로그아웃</Button>
                                                     </Menu.Item>
                                                 </Menu>
                                             )}
@@ -92,7 +93,7 @@ const AppLayout = ({ children }) => {
                         {children}
                     </Col>
                     <Col xs={24} md={8}>
-                        {isLoggedIn
+                        {me 
                             ? <PostForm />
                             : <LoginForm />
                         } 

@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -9,6 +9,8 @@ import { EllipsisOutlined, HeartFilled, HeartOutlined, MessageOutlined } from '@
 import DetailPost from './DetailPost';
 import ImagesView from './imagesView';
 import CommentForm from './CommentForm';
+import PostCardContent from './PostCardContent';
+import { REMOVE_POST_REQUEST } from '../reducers/post';
 
 import { FormGutter, CardWrapper, CardTop } from './style/global';
 
@@ -17,8 +19,8 @@ const CardButton = styled(Button)`
     height: auto;
     margin: 0;
     padding: 0;
-    margin-right: 20px;
-
+    margin-right: 10px;
+    
     & + p {
         display: inline-block;
         margin-bottom: 0;
@@ -26,7 +28,9 @@ const CardButton = styled(Button)`
 `;
 
 const PostCard = ({ post, images }) => {
+    const dispatch = useDispatch();
     const id = useSelector((state) => state.user.me?.id);
+    const { removePostLoading } = useSelector((state) => state.post)
     //const id = me?.id;   // === me && me.id;    optional chaning
 
     const [liked, setLiked] = useState(false);
@@ -50,6 +54,13 @@ const PostCard = ({ post, images }) => {
     const handleCancel = () => {
         setIsModalVisible(false);
     };
+
+    const onRemovePost = useCallback(() => {
+        dispatch({
+            type: REMOVE_POST_REQUEST,
+            data: post.id,
+          });
+    }, []);
 
     return (
         <>
@@ -84,7 +95,7 @@ const PostCard = ({ post, images }) => {
                                             <Button type="text">수정</Button>
                                         </Menu.Item>
                                         <Menu.Item>
-                                            <Button danger type="text">삭제</Button>
+                                            <Button danger type="text" onClick={onRemovePost} loading={removePostLoading}>삭제</Button>
                                         </Menu.Item>
                                     </>
                                 ) : (
@@ -112,11 +123,11 @@ const PostCard = ({ post, images }) => {
                     </Col>
                 </FormGutter>
                 <FormGutter>
-                    <CardButton type="text">{post.User.nickname}</CardButton>
-                    <p>{post.content}</p>
+                    <CardButton type="text"><b>{post.User.nickname}</b></CardButton>
+                    <PostCardContent postData={post.content} />
                 </FormGutter>
                 <FormGutter>
-                    <CardButton type="text" onClick={onOpenDetailPost}>{post.Comments.length}개의 댓글</CardButton>
+                    <CardButton type="text" onClick={onOpenDetailPost}><b>{post.Comments.length}개</b>의 댓글</CardButton>
                     <CommentForm post={post} />
                 </FormGutter>
             </CardWrapper>

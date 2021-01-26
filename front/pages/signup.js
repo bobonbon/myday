@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import Head from 'next/head';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { Form, Input, Checkbox, Button } from 'antd';
 import AppLayout from '../components/AppLayout';
@@ -7,12 +8,17 @@ import useInput from '../hooks/useInput';
 
 import { FormGutter } from '../components/style/global';
 
+import { SIGN_UP_REQUEST } from '../reducers/user';
+
 const ErrorMessage = styled.div`
     color: red;
 `;
 
 const SIgnup = () => {
-    const [id, onChangeId] = useInput('');
+    const dispatch = useDispatch();
+    const { signUpLoading } = useSelector((state) => state.user);
+    
+    const [email, onChangeEmail] = useInput('');
     const [nickname, onChangeNickname] = useInput('');
     const [password, onChangePassword] = useInput('');
 
@@ -37,8 +43,15 @@ const SIgnup = () => {
         if (!term) {
             return setTermError(true);
         }
-        console.log(id, nickname, password);
-    }, [password, passwordCheck, term]);
+        return dispatch({
+            type: SIGN_UP_REQUEST,
+            data: {
+                email, 
+                password, 
+                nickname,
+            }
+        })
+    }, [email, password, passwordCheck, term]);
 
     return (
         <>
@@ -49,9 +62,9 @@ const SIgnup = () => {
                 </Head>
                     <Form onFinish={onSubmit}>
                         <FormGutter>
-                            <label htmlFor="user-id">아이디</label>
+                            <label htmlFor="user-email">이메일</label>
                             <br />
-                            <Input name="user-id" value={id} required onChange={onChangeId} />
+                            <Input name="user-email" type="email" value={email} required onChange={onChangeEmail} />
                         </FormGutter>
                         <FormGutter>
                             <label htmlFor="user-nickname">닉네임</label>
@@ -86,7 +99,7 @@ const SIgnup = () => {
                             {termError && <ErrorMessage>좋은 하루를 보내겠다고 약속하셔야 합니다.</ErrorMessage>}
                         </FormGutter>
                         <FormGutter>
-                            <Button type="primary" htmlType="submit">회원가입</Button>
+                            <Button type="primary" htmlType="submit" loading={signUpLoading}>회원가입</Button>
                         </FormGutter>
                     </Form>
             </AppLayout>

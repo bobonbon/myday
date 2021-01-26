@@ -7,6 +7,11 @@ import { CloseOutlined } from '@ant-design/icons';
 
 import ImagesView from './imagesView';
 import CommentForm from './CommentForm';
+import PostCardContent from './PostCardContent';
+
+import { FormGutter, CardWrapper, CardTop } from './style/global';
+import { Card, Button, Modal, Menu } from 'antd';
+import { EllipsisOutlined, HeartFilled, HeartOutlined, MessageOutlined } from '@ant-design/icons'
 
 const DetailWrapper = styled.div`
     position: fixed;
@@ -52,10 +57,17 @@ const DetailColLeft = styled(Col)`
 const DetailColRight = styled(Col)`
     overflow-y: hidden;
     height: 100%;
+    padding-top: 60px;
 
-    & > .comment-wrapper {
+    & > div:last-of-type {
         overflow-y: scroll;
-        height: calc(100% - 100px)
+        height: calc(100% - 50px);
+        padding-left: 20px;
+    }
+
+    & > div:last-of-type > span {
+        display: block;
+        padding: 20px 0 10px;
     }
 `;
 
@@ -70,12 +82,18 @@ const DetailPost = ({ images, post, onCloseDetailPost }) => {
                         <ImagesView images={images} />
                     </DetailColLeft>
                     <DetailColRight xs={24} md={10}>
-                        <div className="comment-wrapper">
-                            <Comment 
-                                avatar={<Avatar>{post.User.nickname[0]}</Avatar>} 
-                                author={post.User.nickname} 
-                                content={post.content} 
+                        <CardTop>
+                            <Card.Meta 
+                                avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
+                                title={post.User.nickname}
                             />
+                        </CardTop>
+                        <div>
+                            {/* <Comment 
+                                avatar={<Avatar>{post.User.nickname[0]}</Avatar>} 
+                                author={post.User.nickname}
+                            /> */}
+                            <PostCardContent postData={post.content} />
                             
                             <List 
                                 dataSource={post.Comments}
