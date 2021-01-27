@@ -10,6 +10,7 @@ import DetailPost from './DetailPost';
 import ImagesView from './imagesView';
 import CommentForm from './CommentForm';
 import PostCardContent from './PostCardContent';
+import FollowButton from './FollowButton';
 import { REMOVE_POST_REQUEST } from '../reducers/post';
 
 import { FormGutter, CardWrapper, CardTop } from './style/global';
@@ -100,7 +101,7 @@ const PostCard = ({ post, images }) => {
                                     </>
                                 ) : (
                                         <Menu.Item>
-                                            <Button type="text">팔로우</Button>
+                                            <FollowButton post={post} />
                                         </Menu.Item>
                                 )   
                             }

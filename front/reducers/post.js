@@ -1,50 +1,14 @@
 import shortId from 'shortid';
 import faker from 'faker';
-
 import produce from 'immer';
 
 export const initialState = {
-    mainPosts: [{
-        id: 1,
-        User: {
-            id: 1,
-            nickname: '보봉뽕',
-        },
-        content: '게시글글글글 글아 길어져라져라져라ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ #첫글 #해쉬해쉬',
-        Images: [{
-            src: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTAxMTFfNjIg%2FMDAxNjEwMzIxODcwNjM3.cXtg4PoFJiMIqDJC1Zc7SF9LB27P5chT5t581PihPGkg.hCaX3n01l3m3p6kErAJVfcxMv4j78yAub29zw2-w6A4g.JPEG.puppys1015%2F1610321869250.jpg&type=sc960_832',
-        }, {
-            src: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTAxMDFfMTgw%2FMDAxNjA5NTA0NjYzODA5.7e04PejjVZqEXViwNk2PNYeSHaiIqsPlF2WYv39NWrsg._UedLkSz7OdvwK5UvH1RnU1N9E0Tx_v6cBTdbJvBgkkg.JPEG.gasilver_love%2FIMG_1227.jpg&type=sc960_832',
-        }, {
-            src: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMTAxMTlfMTUx%2FMDAxNjEwOTg0MzE1NTI2.NRqBjwgc5hUo_ViF9LyjCcGb7uanb9EIDWXuHfZ9JEgg._kCOYvH4IgnbQLyfTjJASqzcfauhjWUT_27Dim2moJQg.JPEG.urmyangel1004%2FIMG_8545.JPG&type=sc960_832',
-        }],
-        Comments: [{
-            id: shortId.generate(),
-            User: {
-                nickname: '그림자분신',
-            },
-            content: '내가 알던 삼색이가 맞나.',
-        }, {
-            id: shortId.generate(),
-            User: {
-                nickname: '그림자분신',
-            },
-            content: '내가 알던 삼색이가 맞나.',
-        }, {
-            id: shortId.generate(),
-            User: {
-                nickname: '그림자분신',
-            },
-            content: '내가 알던 삼색이가 맞나.',
-        }, {
-            id: shortId.generate(),
-            User: {
-                nickname: '그림자분신',
-            },
-            content: '내가 알던 삼색이가 맞나.',
-        }]
-    }],
+    mainPosts: [],
     imagePaths: [],
+    hasMorePosts: true,
+    loadPostsLoading: false,
+    loadPostsDone: false,
+    loadPostsError: null,
     addPostLoading: false,
     addPostDone: false,
     addPostError: null,
@@ -56,6 +20,31 @@ export const initialState = {
     addCommentError: null,
     // 기본 소문자 표기로 설정 되지만 이 중 관계형 데이터는 기본값이 첫 글자는 대문자 표기 됨
 }
+
+export const generateDummyPost = (number) => Array(number).fill().map(() => ({
+    id: shortId.generate(),
+    User: {
+        id: shortId.generate(),
+        nickname: faker.name.findName(), 
+    },
+    content: faker.lorem.paragraph(),
+    Images: [{
+        src: faker.image.image(),
+    }, {
+        src: faker.image.image(),
+    }],
+    Comments: [{
+        User: {
+            id: shortId.generate(),
+            nickname: faker.name.findName(), 
+        },
+        content: faker.lorem.sentence(),
+    }],
+}));
+
+export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
+export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
+export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE';
 
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
@@ -95,13 +84,28 @@ const dummyComment = (data) => ({
     content: data,
     User: {
         id: 1,
-        nickname: '제로초',
+        nickname: '보봉뽕',
     },
 });
 
 const reducer = (state = initialState, action) => {
     return produce(state, (draft) => {
         switch (action.type) {
+            case LOAD_POSTS_REQUEST:
+                draft.loadPostsLoading = true;
+                draft.loadPostsDone = false;
+                draft.loadPostsError = null;
+                break;
+            case LOAD_POSTS_SUCCESS:
+                draft.loadPostsLoading = false;
+                draft.loadPostsDone = true;
+                draft.mainPosts = draft.mainPosts.concat(action.data);
+                draft.hasMorePosts = draft.mainPosts.length < 50;
+                break;
+            case LOAD_POSTS_FAILURE:
+                draft.loadPostsLoading = false;
+                draft.loadPostsError = action.error;
+                break;
             case ADD_POST_REQUEST:
                 draft.addPostLoading = true;
                 draft.addPostDone = false;
@@ -137,7 +141,7 @@ const reducer = (state = initialState, action) => {
                 break;
             case ADD_COMMENT_SUCCESS: {
                 const post = draft.mainPosts.find((v) => v.id === action.data.postId);
-                post.Comments.unshift(dummyComment(action.data.content));
+                post.Comments.push(dummyComment(action.data.content));
                 draft.addCommentLoading = false;
                 draft.addCommentDone = true;
                 break;

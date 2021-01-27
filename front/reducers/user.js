@@ -10,6 +10,12 @@ export const initialState = {
     signUpLoading: false,
     signUpDone: false,
     signUpError: null,
+    followLoading: false,
+    followDone: false,
+    followError: null,
+    unfollowLoading: false,
+    unfollowDone: false,
+    unfollowError: null,
     me: null,
     signUpData: {},
     loginData: {},
@@ -46,7 +52,19 @@ const dummyUser = (data) => ({
     ...data,
     nickname: '보봉뽕',
     id: 1,
-    Posts: [{ id: 1 }],
+    Posts: [{ 
+        id: 1,
+        content: '어떻게 되는거지???',
+        Images: [{
+            src: 'https://fimg5.pann.com/new/download.jsp?FileID=56246617',
+        },],
+    }, { 
+        id: 2,
+        content: '어떻게 되는거지???',
+        Images: [{
+            src: 'https://fimg5.pann.com/new/download.jsp?FileID=56246617',
+        },],
+    }],
     Followings: [{ nickname: '그림자분신1호' }, { nickname: '그림자분신2호' }, { nickname: '그림자분신3호' }],
     Followers: [{ nickname: '그림자분신4호' }, { nickname: '그림자분신5호' }, { nickname: '그림자분신6호' }, { nickname: '그림자분신7호' }, { nickname: '그림자분신8호' }],
   });
@@ -102,6 +120,34 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
         case SIGN_UP_FAILURE:
             draft.signUpLoading = false;
             draft.signUpError = action.error;
+            break;
+        case FOLLOW_REQUEST:
+            draft.followLoading = true;
+            draft.followError = null;
+            draft.followDone = false;
+            break;
+        case FOLLOW_SUCCESS:
+            draft.followLoading = false;
+            draft.followDone = true;
+            draft.me.Followings.push({ id: action.data });
+            break;
+        case FOLLOW_FAILURE:
+            draft.followLoading = false;
+            draft.followError = action.error;
+            break;
+        case UNFOLLOW_REQUEST:
+            draft.unfollowLoading = true;
+            draft.unfollowError = null;
+            draft.unfollowDone = false;
+            break;
+        case UNFOLLOW_SUCCESS:
+            draft.unfollowLoading = false;
+            draft.unfollowDone = true;
+            draft.me.Followings = draft.me.Followings.filter((v) => v.id !== action.data);
+            break;
+        case UNFOLLOW_FAILURE:
+            draft.unfollowLoading = false;
+            draft.unfollowError = action.error;
             break;
         case ADD_POST_TO_ME:
             draft.me.Posts.unshift({ id: action.data });

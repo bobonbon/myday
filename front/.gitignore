@@ -1,3 +1,4 @@
 .next
-components\style
+components/style
+*.css
 node_modules

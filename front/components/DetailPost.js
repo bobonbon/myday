@@ -20,7 +20,7 @@ const DetailWrapper = styled.div`
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 10;
+    z-index: 100;
 `;
 
 const CloseBtn = styled(CloseOutlined)`
@@ -51,7 +51,17 @@ const DetailRow = styled(Row)`
 `;
 
 const DetailColLeft = styled(Col)`
+    position: relative;
     height: 100%;
+    background-color: #000;
+
+    & .slick-slider.slick-initialized {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+    }
 `;
 
 const DetailColRight = styled(Col)`

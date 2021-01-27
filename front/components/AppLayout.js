@@ -12,16 +12,26 @@ import LoginForm from './LoginForm';
 import { LOG_OUT_REQUEST } from '../reducers/user';
 
 const GnbWrapper = styled.div`
+    position: fixed;
+    left: 0;
+    top: 0;
     width: 100%; 
     height: auto;
-    backgroud-color: #f6f6f6;
+    background-color: #fff;
     border-bottom: 1px solid #dbdbdb;
+    z-index: 10;
 `;
 
 const HeaderItem = styled.li`
     display: inline-block;
     min-width: 100px;
     padding: 10px 0;
+`;
+
+const BodyWrapper = styled.div`
+    max-width: 975px;
+    margin: 0 auto;
+    padding: 60px 20px;
 `;
 
 
@@ -62,6 +72,9 @@ const AppLayout = ({ children }) => {
                                             overlay={(
                                                 <Menu>
                                                     <Menu.Item>
+                                                        <Link href="/mypage"><a>마이페이지</a></Link>
+                                                    </Menu.Item>
+                                                    <Menu.Item>
                                                         <Link href="/profile"><a>프로필</a></Link>
                                                     </Menu.Item>
                                                     <Menu.Divider />
@@ -87,7 +100,7 @@ const AppLayout = ({ children }) => {
                     </Row>
                 </ul>
             </GnbWrapper>
-            <div className="wrapper">
+            <BodyWrapper>
                 <Row>
                     <Col xs={24} md={16}>
                         {children}
@@ -99,7 +112,7 @@ const AppLayout = ({ children }) => {
                         } 
                     </Col>
                 </Row>
-            </div>
+            </BodyWrapper>
             
         </div>
     );
