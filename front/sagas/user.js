@@ -1,65 +1,45 @@
-import { all, fork, takeLatest, put, delay } from 'redux-saga/effects';
+import { all, fork, takeLatest, put, delay, call } from 'redux-saga/effects';
 import axios from 'axios';
 
 import {
-    LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_IN_FAILURE,
-    LOG_OUT_REQUEST, LOG_OUT_SUCCESS, LOG_OUT_FAILURE,
+    LOAD_MY_INFO_REQUEST, LOAD_MY_INFO_SUCCESS, LOAD_MY_INFO_FAILURE,
     SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SIGN_UP_FAILURE,
+    LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_IN_FAILURE,
+    LOG_OUT_REQUEST, LOG_OUT_SUCCESS, LOG_OUT_FAILURE,  
     CHANGE_NICKNAME_REQUEST, CHANGE_NICKNAME_SUCCESS, CHANGE_NICKNAME_FAILURE,
     FOLLOW_REQUEST, FOLLOW_SUCCESS, FOLLOW_FAILURE, 
     UNFOLLOW_REQUEST, UNFOLLOW_SUCCESS, UNFOLLOW_FAILURE,
 } from '../reducers/user';
 
-function logInAPI(data) {
-	return axios.post('/api/login', data);
+function loadMyInfoAPI() {
+	return axios.get('/user');   // get, delete 는 data가 없다
 }
 
-function* logIn(action) {
+function* loadMyInfo(action) {
     try {
-        //const result = yield call(logInAPI, action.data);
-        yield delay(1000);
+        const result = yield call(loadMyInfoAPI, action.data);
         yield put({
-            type: LOG_IN_SUCCESS,
-            data: action.data,   //성공결과
+            type: LOAD_MY_INFO_SUCCESS,
+            data: result.data,   //성공결과
         });
     } catch (err) {
         console.error(err); 
         yield put({
-            type: LOG_IN_FAILURE,
+            type: LOAD_MY_INFO_FAILURE,
             error: err.response.data, //실패 결과
         })
         
     }
 }
 
-function logOutAPI() {
-	return axios.post('/api/logout');
-}
+function signUpAPI(data) {
+	return axios.post('/user', data);    // 이 user가 POST /user/
+}   // 위의 data: { email, password, nickname } at signup.js
 
-function* logOut() {
+function* signUp(action) {
     try {
-        //const result = yield call(logOutAPI);
-        yield delay(1000);
-        yield put({
-            type: LOG_OUT_SUCCESS,
-        });
-    } catch (err) {
-        yield put({
-            type: LOG_OUT_FAILURE,
-            error: err.response.data, //실패 결과
-        })
-        console.error(err);  
-    }
-}
-
-function signUpAPI() {
-	return axios.post('/api/signUp');
-}
-
-function* signUp() {
-    try {
-        //const result = yield call(signUpAPI);
-        yield delay(1000);
+        const result = yield call(signUpAPI, action.data);
+        console.log(result);
         yield put({
             type: SIGN_UP_SUCCESS,
         });
@@ -72,8 +52,48 @@ function* signUp() {
     }
 }
 
+function logInAPI(data) {
+	return axios.post('/user/login', data);
+}
+
+function* logIn(action) {
+    try {
+        const result = yield call(logInAPI, action.data);
+        yield put({
+            type: LOG_IN_SUCCESS,
+            data: result.data,   //성공결과
+        });
+    } catch (err) {
+        console.error(err); 
+        yield put({
+            type: LOG_IN_FAILURE,
+            error: err.response.data, //실패 결과
+        })
+        
+    }
+}
+
+function logOutAPI() {
+	return axios.post('/user/logout');
+}
+
+function* logOut() {
+    try {
+        yield call(logOutAPI);
+        yield put({
+            type: LOG_OUT_SUCCESS,
+        });
+    } catch (err) {
+        yield put({
+            type: LOG_OUT_FAILURE,
+            error: err.response.data, //실패 결과
+        })
+        console.error(err);  
+    }
+}
+
 function followAPI() {
-	return axios.post('/api/follow');
+	return axios.post('/user/follow');
 }
 
 function* follow(action) {
@@ -94,7 +114,7 @@ function* follow(action) {
 }
 
 function unfollowAPI() {
-	return axios.post('/api/unfollow');
+	return axios.post('/user/unfollow');
 }
 
 function* unfollow(action) {
@@ -112,6 +132,10 @@ function* unfollow(action) {
         })
         console.error(err);  
     }
+}
+
+function* watchLoadMyInfo() {
+    yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
 }
 
 function* watchLogIn() {
@@ -136,6 +160,7 @@ function* watchUnfollow() {
 
 export default function* userSaga() {
     yield all([
+        fork(watchLoadMyInfo), 
         fork(watchLogIn), 
         fork(watchLogOut), 
         fork(watchSignUp), 

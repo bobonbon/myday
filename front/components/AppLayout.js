@@ -7,6 +7,7 @@ import { Menu, Input, Row, Col, Button, Dropdown } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 
+import UserProfile from './UserProfile';
 import PostForm from './PostForm';
 import LoginForm from './LoginForm';
 import { LOG_OUT_REQUEST } from '../reducers/user';
@@ -32,6 +33,10 @@ const BodyWrapper = styled.div`
     max-width: 975px;
     margin: 0 auto;
     padding: 60px 20px;
+`;
+
+const ColPadding = styled(Col)`
+    padding: 20px;
 `;
 
 
@@ -72,9 +77,6 @@ const AppLayout = ({ children }) => {
                                             overlay={(
                                                 <Menu>
                                                     <Menu.Item>
-                                                        <Link href="/mypage"><a>마이페이지</a></Link>
-                                                    </Menu.Item>
-                                                    <Menu.Item>
                                                         <Link href="/profile"><a>프로필</a></Link>
                                                     </Menu.Item>
                                                     <Menu.Divider />
@@ -102,15 +104,15 @@ const AppLayout = ({ children }) => {
             </GnbWrapper>
             <BodyWrapper>
                 <Row>
-                    <Col xs={24} md={16}>
+                    <ColPadding xs={24} md={16}>
                         {children}
-                    </Col>
-                    <Col xs={24} md={8}>
+                    </ColPadding>
+                    <ColPadding xs={24} md={8}>
                         {me 
-                            ? <PostForm />
+                            ? <UserProfile />
                             : <LoginForm />
                         } 
-                    </Col>
+                    </ColPadding>
                 </Row>
             </BodyWrapper>
             

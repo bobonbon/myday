@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, Avatar, Button } from 'antd';
-
+import styled from 'styled-components';
 import { LOG_OUT_REQUEST } from '../reducers/user';
+
 
 const UserProfile = () => {
     const { me, logOutLoading } = useSelector((state) => state.user);

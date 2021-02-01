@@ -4,10 +4,8 @@ import AppLayout from '../components/AppLayout';
 import PostForm from '../components/PostForm';
 import PostCard from '../components/PostCard';
 
-import user from '../reducers/user';
-import post from '../reducers/post';
-
 import { LOAD_POSTS_REQUEST } from '../reducers/post';
+import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 
 const Home = () => {
     const dispatch = useDispatch();
@@ -16,13 +14,16 @@ const Home = () => {
 
     useEffect(() => {
         dispatch({
+            type: LOAD_MY_INFO_REQUEST,
+        })
+        dispatch({
             type: LOAD_POSTS_REQUEST,
         });
     }, []);
 
     useEffect(() => {
         function onScroll () {
-            console.log(window.scrollY, document.documentElement.clientHeight, document.documentElement.scrollHeight);
+            //console.log(window.scrollY, document.documentElement.clientHeight, document.documentElement.scrollHeight);
             if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 500) {
                 if (hasMorePosts && !loadPostsLoading) {
                     dispatch({
@@ -39,6 +40,7 @@ const Home = () => {
     
     return (
         <AppLayout>
+            {me && <PostForm />}
             {mainPosts.map((post) => <PostCard key={post.id} post={post} />)}
         </AppLayout>
     );

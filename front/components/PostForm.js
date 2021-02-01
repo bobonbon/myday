@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Form, Input } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
-import { FormGutter, FormPadding } from './style/global';
+import { FormGutter } from './style/global';
 
 import { addPost } from '../reducers/post';
 import useInput from '../hooks/useInput';
@@ -29,7 +29,7 @@ const PostForm = () => {
 
     return (
         <>
-            <FormPadding style={{ margin: '10px 0 20px' }} encType="multipart/form-data" onFinish={onSubmit}>
+            <Form style={{ margin: '10px 0 20px' }} encType="multipart/form-data" onFinish={onSubmit}>
                 <Input.TextArea value={text} onChange={onChangeText} maxLength={140} placeholder="오늘의 기록을 남겨보세요." />
                 <FormGutter>
                     <input type="file" multiple hidden ref={imageInput} />
@@ -44,7 +44,7 @@ const PostForm = () => {
                         </div>
                     ))}
                 </FormGutter>
-            </FormPadding>
+            </Form>
         </>
     )
 };
