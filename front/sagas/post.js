@@ -1,15 +1,16 @@
 import { all, fork, takeLatest, put, delay, throttle, call } from 'redux-saga/effects';
 import axios from 'axios';
 import {
-    LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE, generateDummyPost,
+    LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE,
     ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE, 
     REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS, REMOVE_POST_FAILURE,
     ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAILURE, 
+    LIKE_POST_REQUEST, LIKE_POST_SUCCESS, LIKE_POST_FAILURE, 
+    UNLIKE_POST_REQUEST, UNLIKE_POST_SUCCESS, UNLIKE_POST_FAILURE,
 } from '../reducers/post';
 import {
     ADD_POST_TO_ME, REMOVE_POST_OF_ME,
 } from '../reducers/user';
-import shortId from 'shortid';
 
 function loadPostsAPI(data) {
 	return axios.get('/posts', data);
@@ -17,11 +18,10 @@ function loadPostsAPI(data) {
 
 function* loadPosts(action) {
     try {
-        //const result = yield call(loadPostsAPI, action.data);
-        yield delay(1000);
+        const result = yield call(loadPostsAPI, action.data);
         yield put({
             type: LOAD_POSTS_SUCCESS,
-            data: generateDummyPost(10),
+            data: result.data,
         });
     } catch (err) {
         yield put({
@@ -44,7 +44,7 @@ function* addPost(action) {
         });
         yield put({
             type: ADD_POST_TO_ME,
-            data: result.data//.id,
+            data: result.data.id  //.id,
         });
     } catch (err) {
         yield put({
@@ -56,16 +56,15 @@ function* addPost(action) {
 }
 
 function removePostAPI(data) {
-	return axios.delete('/post', data);
+	return axios.delete(`/post/${data}`);
 }
 
 function* removePost(action) {
     try {
-        //const result = yield call(removePostAPI, action.data);
-        yield delay(1000);
+        const result = yield call(removePostAPI, action.data);
         yield put({
             type: REMOVE_POST_SUCCESS,
-            data: action.data,  
+            data: result.data,  
         });
         yield put({
             type: REMOVE_POST_OF_ME,
@@ -81,7 +80,7 @@ function* removePost(action) {
 }
 
 function addCommentAPI(data) {
-	return axios.post(`/post/${data.postId}/comment`, data);
+	return axios.post(`/post/${data.postId}/comment`, data); // POST /post/1/comment
 }
 
 function* addComment(action) {
@@ -92,8 +91,48 @@ function* addComment(action) {
             data: result.data,   //성공결과
         });
     } catch (err) {
+        console.error(err);  
         yield put({
             type: ADD_COMMENT_FAILURE,
+            error: err.response.data, //실패 결과
+        })
+    }
+}
+
+function likePostAPI(data) {
+	return axios.patch(`/post/${data}/like`); // 데이터의 일부분만 수정하면 patch
+}
+
+function* likePost(action) {
+    try {
+        const result = yield call(likePostAPI, action.data);
+        yield put({
+            type: LIKE_POST_SUCCESS,
+            data: result.data,  // PostId, UserId (back routes)
+        });
+    } catch (err) {
+        yield put({
+            type: LIKE_POST_FAILURE,
+            error: err.response.data, //실패 결과
+        })
+        console.error(err);  
+    }
+}
+
+function unlikePostAPI(data) {
+	return axios.delete(`/post/${data}/like`);
+}
+
+function* unlikePost(action) {
+    try {
+        const result = yield call(unlikePostAPI, action.data);
+        yield put({
+            type: UNLIKE_POST_SUCCESS,
+            data: result.data,
+        });
+    } catch (err) {
+        yield put({
+            type: UNLIKE_POST_FAILURE,
             error: err.response.data, //실패 결과
         })
         console.error(err);  
@@ -116,6 +155,14 @@ function* watchAddComment() {
     yield takeLatest(ADD_COMMENT_REQUEST, addComment);  
 }
 
+function* watchLikePost() {
+    yield takeLatest(LIKE_POST_REQUEST, likePost);  
+}
+
+function* watchUnlikePost() {
+    yield takeLatest(UNLIKE_POST_REQUEST, unlikePost);  
+}
+
 //throttle: 2000 동안은 서버에 요청 1 번만 보냄(함수가 호출 된 후 일정시간이 지나기 전에 호출되지 않는다.)
 //takeLatest: 똑같은 요청이 동시에 여러번 와도 로딩 중인 동일한 액션 중에 마지막 요청만 처리함(서버로는 모두 요청을 보냄)
 
@@ -125,5 +172,7 @@ export default function* postSaga() {
        fork(watchAddPost), 
        fork(watchRemovePost), 
        fork(watchAddComment), 
+       fork(watchLikePost), 
+       fork(watchUnlikePost), 
     ]);
 }

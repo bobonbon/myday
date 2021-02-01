@@ -11,7 +11,7 @@ import ImagesView from './imagesView';
 import CommentForm from './CommentForm';
 import PostCardContent from './PostCardContent';
 import FollowButton from './FollowButton';
-import { REMOVE_POST_REQUEST } from '../reducers/post';
+import { REMOVE_POST_REQUEST, LIKE_POST_REQUEST, UNLIKE_POST_REQUEST } from '../reducers/post';
 
 import { FormGutter, CardWrapper, CardTop } from './style/global';
 
@@ -33,10 +33,19 @@ const PostCard = ({ post, images }) => {
     const id = useSelector((state) => state.user.me?.id);
     const { removePostLoading } = useSelector((state) => state.post)
     //const id = me?.id;   // === me && me.id;    optional chaning
-
-    const [liked, setLiked] = useState(false);
-    const onToggleLike = useCallback(() => {
-        setLiked((prev) => !prev);
+    
+    const liked = post.Likers.find((v) => v.id === id); // 게시글 좋아한 사람 중에 내가 있는가
+    const onLike = useCallback(() => {
+        dispatch({
+            type: LIKE_POST_REQUEST,
+            data: post.id,
+        })
+    }, []);
+    const onUnlike = useCallback(() => {
+        dispatch({
+            type: UNLIKE_POST_REQUEST,
+            data: post.id,
+        })
     }, []);
 
     const [openDetailPost, setOpenDetailPost] = useState(false);
@@ -61,6 +70,7 @@ const PostCard = ({ post, images }) => {
             type: REMOVE_POST_REQUEST,
             data: post.id,
           });
+        setIsModalVisible(false);
     }, []);
 
     return (
@@ -113,8 +123,8 @@ const PostCard = ({ post, images }) => {
                         <Button.Group>
                             <CardButton type="text" size="large">
                                 {liked 
-                                    ? <HeartFilled style={{ color: 'red' }} onClick={onToggleLike} /> 
-                                    : <HeartOutlined onClick={onToggleLike} />
+                                    ? <HeartFilled style={{ color: 'red' }} onClick={onUnlike} /> 
+                                    : <HeartOutlined onClick={onLike} />
                                 }
                             </CardButton>
                             <CardButton type="text" size="large">
@@ -142,9 +152,10 @@ PostCard.propTypes = {
         id: PropTypes.number,
         User: PropTypes.object,
         content: PropTypes.string,
-        createdAt: PropTypes.object,
+        createdAt: PropTypes.string,
         Comments: PropTypes.arrayOf(PropTypes.object),
         Images: PropTypes.arrayOf(PropTypes.object),
+        Likers: PropTypes.arrayOf(PropTypes.object),
     }).isRequired,
 }
 
