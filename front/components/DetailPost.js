@@ -11,7 +11,6 @@ import PostCardContent from './PostCardContent';
 
 import { FormGutter, CardWrapper, CardTop } from './style/global';
 import { Card, Button, Modal, Menu } from 'antd';
-import { EllipsisOutlined, HeartFilled, HeartOutlined, MessageOutlined } from '@ant-design/icons'
 
 const DetailWrapper = styled.div`
     position: fixed;

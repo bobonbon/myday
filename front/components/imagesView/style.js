@@ -14,15 +14,21 @@ export const SliderImageWrpper = styled.div`
     & img {
         display: block;
         max-width: 100%;
-        max-height: 600px;
+        max-height: 500px;
         margin: 0 auto;
     }
 `;
 
 export const Global = createGlobalStyle`
+    .slick-track:after {
+        display: block;
+        clear: both;
+        content: ""
+    }
     .slick-slide {
-        display: inline-block;
+        display: block;
         overflow: hidden;
+        float: left;
         max-width: 100%;
         vertical-align: middle;
     }

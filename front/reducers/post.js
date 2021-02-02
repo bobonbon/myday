@@ -1,5 +1,3 @@
-import shortId from 'shortid';
-import faker from 'faker';
 import produce from 'immer';
 
 export const initialState = {
@@ -12,6 +10,9 @@ export const initialState = {
     addPostLoading: false,
     addPostDone: false,
     addPostError: null,
+    uploadImagesLoading: false,
+    uploadImagesDone: false,
+    uploadImagesError: null,
     removePostLoading: false,
     removePostDone: false,
     removePostError: null,
@@ -35,6 +36,10 @@ export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
 export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
 
+export const UPLOAD_IMAGES_REQUEST = 'UPLOAD_IMAGES_REQUEST';
+export const UPLOAD_IMAGES_SUCCESS = 'UPLOAD_IMAGES_SUCCESS';
+export const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE';
+
 export const REMOVE_POST_REQUEST = 'REMOVE_POST_REQUEST';
 export const REMOVE_POST_SUCCESS = 'REMOVE_POST_SUCCESS';
 export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE';
@@ -51,6 +56,8 @@ export const UNLIKE_POST_REQUEST = 'UNLIKE_POST_REQUEST';
 export const UNLIKE_POST_SUCCESS = 'UNLIKE_POST_SUCCESS';
 export const UNLIKE_POST_FAILURE = 'UNLIKE_POST_FAILURE';
 
+export const REMOVE_IMAGE = 'REMOVE_IMAGE';
+
 export const addPost = (data) => ({
     type: ADD_POST_REQUEST,
     data,
@@ -64,6 +71,9 @@ export const addComment = (data) => ({
 const reducer = (state = initialState, action) => {
     return produce(state, (draft) => {
         switch (action.type) {
+            case REMOVE_IMAGE: 
+                draft.imagePaths = draft.imagePaths.filter((v, i) => i !== action.data);
+                break;
             case LOAD_POSTS_REQUEST:
                 draft.loadPostsLoading = true;
                 draft.loadPostsDone = false;
@@ -72,8 +82,8 @@ const reducer = (state = initialState, action) => {
             case LOAD_POSTS_SUCCESS:
                 draft.loadPostsLoading = false;
                 draft.loadPostsDone = true;
-                draft.mainPosts = action.data.concat(draft.mainPosts);//draft.mainPosts.concat(action.data);
-                draft.hasMorePosts = draft.mainPosts.length < 50;
+                draft.mainPosts = draft.mainPosts.concat(action.data);
+                draft.hasMorePosts = draft.mainPosts.length === 10;
                 break;
             case LOAD_POSTS_FAILURE:
                 draft.loadPostsLoading = false;
@@ -88,10 +98,25 @@ const reducer = (state = initialState, action) => {
                 draft.addPostLoading = false;
                 draft.addPostDone = true;
                 draft.mainPosts.unshift(action.data);
+                draft.imagePaths = [];
                 break;
             case ADD_POST_FAILURE:
                 draft.addPostLoading = false;
                 draft.addPostError = action.error;
+                break;
+            case UPLOAD_IMAGES_REQUEST:
+                draft.uploadImagesLoading = true;
+                draft.uploadImagesDone = false;
+                draft.uploadImagesError = null;
+                break;
+            case UPLOAD_IMAGES_SUCCESS:
+                draft.uploadImagesLoading = false;
+                draft.uploadImagesDone = true;
+                draft.imagePaths = action.data;
+                break;
+            case UPLOAD_IMAGES_FAILURE:
+                draft.uploadImagesLoading = false;
+                draft.uploadImagesError = action.error;
                 break;
             case REMOVE_POST_REQUEST:
                 draft.removePostLoading = true;

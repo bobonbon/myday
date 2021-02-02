@@ -1,8 +1,9 @@
-import { all, fork, takeLatest, put, delay, throttle, call } from 'redux-saga/effects';
 import axios from 'axios';
+import { all, fork, takeLatest, put, delay, throttle, call } from 'redux-saga/effects';
 import {
     LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE,
     ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE, 
+    UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_SUCCESS, UPLOAD_IMAGES_FAILURE,
     REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS, REMOVE_POST_FAILURE,
     ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAILURE, 
     LIKE_POST_REQUEST, LIKE_POST_SUCCESS, LIKE_POST_FAILURE, 
@@ -12,13 +13,13 @@ import {
     ADD_POST_TO_ME, REMOVE_POST_OF_ME,
 } from '../reducers/user';
 
-function loadPostsAPI(data) {
-	return axios.get('/posts', data);
+function loadPostsAPI(lastId) {
+    return axios.get(`/posts?lastId=${lastId || 0}`);
 }
 
 function* loadPosts(action) {
     try {
-        const result = yield call(loadPostsAPI, action.data);
+        const result = yield call(loadPostsAPI, action.lastId);
         yield put({
             type: LOAD_POSTS_SUCCESS,
             data: result.data,
@@ -26,13 +27,13 @@ function* loadPosts(action) {
     } catch (err) {
         yield put({
             type: LOAD_POSTS_FAILURE,
-            error: err.response.data, //실패 결과
-        }) 
+            error: err.response.data,
+        });
     }
 }
 
 function addPostAPI(data) {
-	return axios.post('/post', { content: data });
+	return axios.post('/post', data);   // FormData는 감싸면 안됨
 }
 
 function* addPost(action) {
@@ -44,11 +45,31 @@ function* addPost(action) {
         });
         yield put({
             type: ADD_POST_TO_ME,
-            data: result.data.id  //.id,
+            data: result.data.id,
+        });
+    } catch (err) {
+        console.error(err);
+        yield put({
+            type: ADD_POST_FAILURE,
+            error: err.response.data,
+        });
+    }
+}
+
+function uploadImagesAPI(data) {
+	return axios.post('/post/images', data);    
+}
+
+function* uploadImages(action) {
+    try {
+        const result = yield call(uploadImagesAPI, action.data);    // action.data 가 FormData로 넘어온다. 그래서 post에 data를 뭘로 감싸거나 하면 안됨 json이 되어버린다.
+        yield put({
+            type: UPLOAD_IMAGES_SUCCESS,
+            data: result.data,
         });
     } catch (err) {
         yield put({
-            type: ADD_POST_FAILURE,
+            type: UPLOAD_IMAGES_FAILURE,
             error: err.response.data, //실패 결과
         })
         console.error(err);  
@@ -140,11 +161,15 @@ function* unlikePost(action) {
 }
 
 function* watchLoadPosts() {
-    yield throttle(2000, LOAD_POSTS_REQUEST, loadPosts);
+    yield throttle(5000, LOAD_POSTS_REQUEST, loadPosts);
 }
 
 function* watchAddPost() {
     yield takeLatest(ADD_POST_REQUEST, addPost);  
+}
+
+function* watchUploadImages() {
+    yield takeLatest(UPLOAD_IMAGES_REQUEST, uploadImages);  
 }
 
 function* watchRemovePost() {
@@ -170,6 +195,7 @@ export default function* postSaga() {
     yield all([
        fork(watchLoadPosts), 
        fork(watchAddPost), 
+       fork(watchUploadImages), 
        fork(watchRemovePost), 
        fork(watchAddComment), 
        fork(watchLikePost), 

@@ -36,12 +36,18 @@ const PostCard = ({ post, images }) => {
     
     const liked = post.Likers.find((v) => v.id === id); // 게시글 좋아한 사람 중에 내가 있는가
     const onLike = useCallback(() => {
+        if (!id) {
+            return alert('로그인이 필요합니다.');
+        }
         dispatch({
             type: LIKE_POST_REQUEST,
             data: post.id,
         })
     }, []);
     const onUnlike = useCallback(() => {
+        if (!id) {
+            return alert('로그인이 필요합니다.');
+        }
         dispatch({
             type: UNLIKE_POST_REQUEST,
             data: post.id,
