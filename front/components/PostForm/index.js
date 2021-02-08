@@ -5,7 +5,8 @@ import useInput from '../../hooks/useInput';
 
 import { Button, Form, Input } from 'antd';
 import { FormGutter } from '../style/global';
-import { PlusOutlined } from '@ant-design/icons';
+import { FileImageOutlined } from '@ant-design/icons';
+import { AddImagesButton, FormTitle } from './style';
 
 import { addPost, UPLOAD_IMAGES_REQUEST, REMOVE_IMAGE, ADD_POST_REQUEST } from '../../reducers/post';
 
@@ -69,11 +70,14 @@ const PostForm = () => {
     return (
         <>
             <Form style={{ margin: '10px 0' }} encType="multipart/form-data" onFinish={onSubmit}>
-                <PostImagesForm images={imagePaths} />
-                <FormGutter>
-                    <Button onClick={onClickImageUpload} alt="이미지 업로드" title="이미지 업로드"><PlusOutlined /></Button>
+                <FormTitle>새 게시글 작성</FormTitle>
+                    {imagePaths.length === 0 && 
+                        <AddImagesButton onClick={onClickImageUpload} alt="이미지 업로드" title="이미지 업로드">
+                            <FileImageOutlined />
+                        </AddImagesButton>
+                    }
+                    <PostImagesForm images={imagePaths} />
                     <input type="file" name="image" multiple hidden ref={imageInput} onChange={onChangeImages} />
-                </FormGutter>
                 <FormGutter>
                 <Input.TextArea 
                     value={text} 
