@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
-import withReduxSaga from 'next-redux-saga';
 import GlobalStyle from '../components/style/global';
 import 'antd/dist/antd.css';
 import '../components/style/custom.css';
@@ -25,4 +24,4 @@ App.propTypes = {
     Component: PropTypes.elementType.isRequired,
 }
 
-export default wrapper.withRedux(withReduxSaga(App));
+export default wrapper.withRedux(App);

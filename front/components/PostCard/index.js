@@ -2,18 +2,22 @@ import React, { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import Link from 'next/link';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/ko';
 
 import { Card, Avatar, Button, Row, Col, Modal, Menu } from 'antd';
 import { EllipsisOutlined, HeartFilled, HeartOutlined, MessageOutlined } from '@ant-design/icons'
 
-import DetailPost from './DetailPost';
-import ImagesView from './imagesView';
-import CommentForm from './CommentForm';
-import PostCardContent from './PostCardContent';
-import FollowButton from './FollowButton';
-import { REMOVE_POST_REQUEST, LIKE_POST_REQUEST, UNLIKE_POST_REQUEST } from '../reducers/post';
+import DetailPost from '../DetailaPost';
+import ImagesView from '../imagesView';
+import CommentForm from '../CommentForm/';
+import PostCardContent from '../PostCardContent';
+import FollowButton from '../FollowButton';
+import { REMOVE_POST_REQUEST, LIKE_POST_REQUEST, UNLIKE_POST_REQUEST } from '../../reducers/post';
 
-import { FormGutter, CardWrapper, CardTop } from './style/global';
+import { FormGutter, CardWrapper, CardTop } from '../style/global';
 
 
 const CardButton = styled(Button)`
@@ -27,6 +31,9 @@ const CardButton = styled(Button)`
         margin-bottom: 0;
     }
 `;
+
+dayjs.locale('ko');
+dayjs.extend(relativeTime);
 
 const PostCard = ({ post, images }) => {
     const dispatch = useDispatch();
@@ -83,15 +90,19 @@ const PostCard = ({ post, images }) => {
         <>
             <CardWrapper 
                 cover={post.Images[0] && <ImagesView images={post.Images} />}
-                // cover={<img
-                //     alt="example"
-                //     src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-                //   />}
             >
                 <CardTop>
                     <Card.Meta 
-                        avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
-                        title={post.User.nickname}
+                        avatar={(
+                            <Link href={`/user/${post.User.id}`}>
+                                <a><Avatar>{post.User.nickname[0]}</Avatar></a>
+                            </Link>
+                        )}
+                        title={(
+                            <Link href={`/user/${post.User.id}`}>
+                                <a>{post.User.nickname}</a>
+                            </Link>
+                        )}
                     />
                     <Button type="link" onClick={showModal}>
                         <EllipsisOutlined />
@@ -140,8 +151,9 @@ const PostCard = ({ post, images }) => {
                     </Col>
                 </FormGutter>
                 <FormGutter>
-                    <CardButton type="text"><b>{post.User.nickname}</b></CardButton>
+                    <CardButton type="text"><Link href={`/user/${post.User.id}`}><a><b>{post.User.nickname}</b></a></Link></CardButton>
                     <PostCardContent postData={post.content} />
+                    <div>{dayjs(post.createdAt).locale('ko').fromNow()}</div>
                 </FormGutter>
                 <FormGutter>
                     <CardButton type="text" onClick={onOpenDetailPost}><b>{post.Comments.length}개</b>의 댓글</CardButton>

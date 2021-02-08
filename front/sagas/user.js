@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import {
     LOAD_MY_INFO_REQUEST, LOAD_MY_INFO_SUCCESS, LOAD_MY_INFO_FAILURE,
+    LOAD_USER_REQUEST, LOAD_USER_SUCCESS, LOAD_USER_FAILURE,
     SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SIGN_UP_FAILURE,
     LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_IN_FAILURE,
     LOG_OUT_REQUEST, LOG_OUT_SUCCESS, LOG_OUT_FAILURE,  
@@ -29,6 +30,27 @@ function* loadMyInfo(action) {
         console.error(err); 
         yield put({
             type: LOAD_MY_INFO_FAILURE,
+            error: err.response.data, //실패 결과
+        })
+        
+    }
+}
+
+function loadUserAPI(data) {
+	return axios.get(`/user/${data}`);   // get, delete 는 data가 없다
+}
+
+function* loadUser(action) {
+    try {
+        const result = yield call(loadUserAPI, action.data);
+        yield put({
+            type: LOAD_USER_SUCCESS,
+            data: result.data,   //성공결과
+        });
+    } catch (err) {
+        console.error(err); 
+        yield put({
+            type: LOAD_USER_FAILURE,
             error: err.response.data, //실패 결과
         })
         
@@ -218,6 +240,10 @@ function* watchLoadMyInfo() {
     yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
 }
 
+function* watchLoadUser() {
+    yield takeLatest(LOAD_USER_REQUEST, loadUser);
+}
+
 function* watchLogIn() {
     yield takeLatest(LOG_IN_REQUEST, logIn);
 }
@@ -257,6 +283,7 @@ function* watchChangeNickname() {
 export default function* userSaga() {
     yield all([
         fork(watchLoadMyInfo), 
+        fork(watchLoadUser), 
         fork(watchLogIn), 
         fork(watchLogOut), 
         fork(watchSignUp), 

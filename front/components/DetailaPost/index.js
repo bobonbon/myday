@@ -1,15 +1,20 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import Link from 'next/link';
 import styled from 'styled-components';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/ko';
+
 import { Row, Col, Avatar, Layout, List, Comment } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 
-import ImagesView from './imagesView';
-import CommentForm from './CommentForm';
-import PostCardContent from './PostCardContent';
+import ImagesView from '../imagesView';
+import CommentForm from '../CommentForm';
+import PostCardContent from '../PostCardContent';
 
-import { FormGutter, CardWrapper, CardTop } from './style/global';
+import { FormGutter, CardWrapper, CardTop } from '../style/global';
 import { Card, Button, Modal, Menu } from 'antd';
 
 const DetailWrapper = styled.div`
@@ -80,6 +85,9 @@ const DetailColRight = styled(Col)`
     }
 `;
 
+dayjs.locale('ko');
+dayjs.extend(relativeTime);
+
 const DetailPost = ({ images, post, onCloseDetailPost }) => {
     const id = useSelector((state) => state.post.id);
     return (
@@ -93,8 +101,16 @@ const DetailPost = ({ images, post, onCloseDetailPost }) => {
                     <DetailColRight xs={24} md={10}>
                         <CardTop>
                             <Card.Meta 
-                                avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
-                                title={post.User.nickname}
+                                avatar={(
+                                    <Link href={`user/${post.User.id}`}>
+                                      <a><Avatar>{post.User.nickname[0]}</Avatar></a>
+                                    </Link>
+                                )}
+                                title={(
+                                    <Link href={`user/${post.User.id}`}>
+                                      <a>{post.User.nickname}</a>
+                                    </Link>
+                                )}
                             />
                         </CardTop>
                         <div>
@@ -108,9 +124,22 @@ const DetailPost = ({ images, post, onCloseDetailPost }) => {
                                 dataSource={post.Comments}
                                 renderItem={(item) =>(
                                     <Comment
-                                        avatar={<Avatar size="small">{item.User.nickname[0]}</Avatar>}
-                                        author={item.User.nickname}
-                                        content={item.content}
+                                        avatar={(
+                                            <Link href={`user/${item.User.id}`}>
+                                                <a><Avatar size="small">{item.User.nickname[0]}</Avatar></a>
+                                            </Link>
+                                        )}
+                                        author={(
+                                            <Link href={`user/${item.User.id}`}>
+                                                <a>{item.User.nickname}</a>
+                                            </Link>
+                                        )}
+                                        content={(
+                                            <div>
+                                                {item.content}
+                                                <div>{dayjs(item.createdAt).locale('ko').fromNow()}</div>
+                                            </div>
+                                        )}
                                     />
                                 )}
                             />

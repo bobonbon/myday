@@ -4,8 +4,8 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 
-import useInput from '../hooks/useInput';
-import { LOG_IN_REQUEST } from '../reducers/user';
+import useInput from '../../hooks/useInput';
+import { LOG_IN_REQUEST } from '../../reducers/user';
 
 const FormPadding = styled(Form)`
     padding: 10px 20px;

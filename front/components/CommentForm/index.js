@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { Row, Col, Input } from 'antd';
 import styled from 'styled-components';
 
-import { StyleCommentForm } from './style/global';
-import useInput from '../hooks/useInput';
+import { StyleCommentForm } from '../style/global';
+import useInput from '../../hooks/useInput'
 import { useSelector, useDispatch } from 'react-redux';
-import { ADD_COMMENT_REQUEST } from '../reducers/post';
+import { ADD_COMMENT_REQUEST } from '../../reducers/post';
 
 const InputComment = styled(Input.Search)`
 

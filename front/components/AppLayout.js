@@ -11,6 +11,8 @@ import UserProfile from './UserProfile';
 import PostForm from './PostForm';
 import LoginForm from './LoginForm';
 import { LOG_OUT_REQUEST } from '../reducers/user';
+import useInput from '../hooks/useInput';
+import Router from 'next/router';
 
 const GnbWrapper = styled.div`
     position: fixed;
@@ -43,6 +45,11 @@ const ColPadding = styled(Col)`
 const AppLayout = ({ children }) => {
     const { me, logOutLoading } = useSelector((state) => state.user);
     const dispatch = useDispatch();
+    const [searchInput, onChangeSearchInput] = useInput('');
+
+    const onSearch = useCallback(() => {
+        Router.push(`/hashtag/${searchInput}`);
+    }, [searchInput])
 
     const onLogout = useCallback(() => {
         dispatch({
@@ -62,7 +69,14 @@ const AppLayout = ({ children }) => {
                         </Col>
                         <Col span={8}>
                             <HeaderItem>
-                                <Input.Search allowClear style={{ verticalAlign: 'middle' }} />
+                                <Input.Search 
+                                    allowClear 
+                                    style={{ verticalAlign: 'middle' }} 
+                                    enterButton
+                                    value={searchInput}
+                                    onChange={onChangeSearchInput}
+                                    onSearch={onSearch}
+                                />
                             </HeaderItem>
                         </Col>
                         <Col span={8}>
@@ -109,7 +123,7 @@ const AppLayout = ({ children }) => {
                     </ColPadding>
                     <ColPadding xs={24} md={8}>
                         {me 
-                            ? <UserProfile />
+                            ? <PostForm />
                             : <LoginForm />
                         } 
                     </ColPadding>

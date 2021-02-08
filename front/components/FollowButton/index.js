@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Proptypes from 'prop-types';
 import { Button } from 'antd';
 
-import { FOLLOW_REQUEST, UNFOLLOW_REQUEST } from '../reducers/user';
+import { FOLLOW_REQUEST, UNFOLLOW_REQUEST } from '../../reducers/user';
 
 const FollowButton = ({ post }) => {
     const dispatch = useDispatch();

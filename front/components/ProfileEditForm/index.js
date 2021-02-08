@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Form, Input } from 'antd';
-import { CHANGE_NICKNAME_REQUEST } from '../reducers/user';
-import useInput from '../hooks/useInput';
+import { CHANGE_NICKNAME_REQUEST } from '../../reducers/user';
+import useInput from '../../hooks/useInput';
 
 const ProfileEditForm = () => {
     const style = useMemo(() => ({

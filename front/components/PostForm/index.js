@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Form, Input } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
-import { FormGutter } from './style/global';
+import { FormGutter } from '../style/global';
 import { CloseOutlined } from '@ant-design/icons';
 
-import { addPost, UPLOAD_IMAGES_REQUEST, REMOVE_IMAGE, ADD_POST_REQUEST } from '../reducers/post';
-import useInput from '../hooks/useInput';
+import { addPost, UPLOAD_IMAGES_REQUEST, REMOVE_IMAGE, ADD_POST_REQUEST } from '../../reducers/post';
+import useInput from '../../hooks/useInput';
 
 const PostForm = () => {
     const dispatch = useDispatch();
