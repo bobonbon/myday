@@ -1,27 +1,12 @@
 import React, { useCallback, useEffect } from 'react';
-import { Form, Input, Button } from 'antd';
+import { Input, Button } from 'antd';
 import Link from 'next/link';
-import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 
 import useInput from '../../hooks/useInput';
 import { LOG_IN_REQUEST } from '../../reducers/user';
 
-const FormPadding = styled(Form)`
-    padding: 10px 20px;
-`;
-
-const FormGutter = styled.div`
-    margin-top: 10px;
-
-    & a {
-        margin-left: 10px;
-    }
-
-    & label {
-        color: #b3b3b3;
-    }
-`;
+import { FormPadding, FormGutter } from './style';
 
 const LoginForm = () => {
     const dispatch = useDispatch();

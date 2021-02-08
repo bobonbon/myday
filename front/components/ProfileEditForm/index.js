@@ -4,13 +4,9 @@ import { Form, Input } from 'antd';
 import { CHANGE_NICKNAME_REQUEST } from '../../reducers/user';
 import useInput from '../../hooks/useInput';
 
-const ProfileEditForm = () => {
-    const style = useMemo(() => ({
-        marginBottom: '20px',
-        border: '1px solid #dbdbdb',
-        padding: '10px 20px',
-    }));
+import { ProfileEditStyle } from './style';
 
+const ProfileEditForm = () => {
     const dispatch = useDispatch();
     const { me } = useSelector((state) => state.user);
     const [nickname, onChangeNickname] = useInput(me?.nickname || '');
@@ -23,7 +19,7 @@ const ProfileEditForm = () => {
 
     return(
         <>
-            <Form style={style}>
+            <ProfileEditStyle>
                 <Input.Search 
                     value={nickname}
                     addonBefore="닉네임"
@@ -31,7 +27,7 @@ const ProfileEditForm = () => {
                     onChange={onChangeNickname} 
                     onSearch={onSubmit}
                 />
-            </Form>
+            </ProfileEditStyle>
         </>
     )
 }

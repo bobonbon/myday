@@ -4,6 +4,7 @@ import { Card, Avatar, Button } from 'antd';
 import { LOG_OUT_REQUEST } from '../../reducers/user';
 import Link from 'next/link';
 
+import { ProfileStyle } from './style';
 
 const UserProfile = () => {
     const { me, logOutLoading } = useSelector((state) => state.user);
@@ -16,7 +17,7 @@ const UserProfile = () => {
     }, []);
 
     return(
-        <Card
+        <ProfileStyle
             actions={[
                 <div key="post"><Link href={`user/${me.id}`}><a>게시글 <b>{me.Posts.length}</b>개</a></Link></div>,
                 <div key="follower">팔로우 <b>{me.Followings.length}</b>명</div>,
@@ -28,7 +29,7 @@ const UserProfile = () => {
                 title={me.nickname}
             />
             <Button onClick={onLogout} loading={logOutLoading}>로그아웃</Button>
-        </Card>
+        </ProfileStyle>
     )
 }
 

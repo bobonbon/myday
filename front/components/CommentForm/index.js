@@ -8,23 +8,7 @@ import useInput from '../../hooks/useInput'
 import { useSelector, useDispatch } from 'react-redux';
 import { ADD_COMMENT_REQUEST } from '../../reducers/post';
 
-const InputComment = styled(Input.Search)`
-
-    button {
-        color: tomato;
-        border: none;
-        background-color: #fff;
-        box-shadow: none;
-    }
-
-    button:hover,
-    button:active,
-    button:focus {
-        color: tomato;
-        border: none;
-        background-color: #fff;
-    }
-`;
+import { InputComment } from './style';
 
 const CommentForm = ({ post }) => {
     const dispatch = useDispatch();

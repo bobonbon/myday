@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Button, Form, Input } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
+import PostImagesForm from '../PostImagesForm';
+import useInput from '../../hooks/useInput';
+
+import { Button, Form, Input } from 'antd';
 import { FormGutter } from '../style/global';
-import { CloseOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 
 import { addPost, UPLOAD_IMAGES_REQUEST, REMOVE_IMAGE, ADD_POST_REQUEST } from '../../reducers/post';
-import useInput from '../../hooks/useInput';
 
 const PostForm = () => {
     const dispatch = useDispatch();
@@ -43,6 +45,10 @@ const PostForm = () => {
     });
 
     const onSubmit = useCallback(() => {
+        if (imagePaths.length === 0) {
+            return alert('한 개 이상의 이미지를 첨부해주세요.');
+        }
+
         if (!text || !text.trim()) {
             return alert('게시글을 작성해주세요.');
         }
@@ -62,25 +68,30 @@ const PostForm = () => {
 
     return (
         <>
-            <Form style={{ margin: '10px 0 20px' }} encType="multipart/form-data" onFinish={onSubmit}>
+            <Form style={{ margin: '10px 0' }} encType="multipart/form-data" onFinish={onSubmit}>
+                <PostImagesForm images={imagePaths} />
+                <FormGutter>
+                    <Button onClick={onClickImageUpload} alt="이미지 업로드" title="이미지 업로드"><PlusOutlined /></Button>
+                    <input type="file" name="image" multiple hidden ref={imageInput} onChange={onChangeImages} />
+                </FormGutter>
+                <FormGutter>
                 <Input.TextArea 
                     value={text} 
                     onChange={onChangeText} 
                     placeholder="오늘의 기록을 남겨보세요." 
                 />
+                </FormGutter>
                 <FormGutter>
-                    <input type="file" name="image" multiple hidden ref={imageInput} onChange={onChangeImages} />
-                    <Button onClick={onClickImageUpload}>이미지 업로드</Button>
                     <Button type="primary" style={{ float: 'right' }} htmlType="submit" loading={addPostLoading}>작성</Button>
                 </FormGutter>
-                <FormGutter>
+                {/* <FormGutter>
                     {imagePaths.map((v, i) => (
                         <div key={v} style={{ display: 'inline-block', position: 'relative' }}>
-                            <img src={`http://localhost:3065/${v}`} style={{ display: 'inline-block', maxWidth: '200px' }} alt={v} />
-                            <CloseOutlined style={{ position: 'absolute', right: '0', top: '0', padding: '5px', color: 'rgba(100 ,100 ,100 ,0.8)', cursor: 'poiner', zIndex: '1' }} onClick={onRemoveImage(i)}>제거</CloseOutlined>
+                            <img src={`http://localhost:3065/${v}`} style={{ display: 'inline-block', maxWidth: '100%' }} alt={v} />
+                            <CloseOutlined style={{ position: 'absolute', right: '0', top: '0', padding: '5px', color: 'rgba(100 ,100 ,100 ,0.8)', cursor: 'pointer', zIndex: '1' }} onClick={onRemoveImage(i)}>제거</CloseOutlined>
                         </div>
                     ))}
-                </FormGutter>
+                </FormGutter> */}
             </Form>
         </>
     )

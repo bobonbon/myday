@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/ko';
 
-import { Card, Avatar, Button, Row, Col, Modal, Menu } from 'antd';
+import { Card, Avatar, Button, Col, Modal, Menu } from 'antd';
 import { EllipsisOutlined, HeartFilled, HeartOutlined, MessageOutlined } from '@ant-design/icons'
 
 import DetailPost from '../DetailaPost';
@@ -17,20 +17,8 @@ import PostCardContent from '../PostCardContent';
 import FollowButton from '../FollowButton';
 import { REMOVE_POST_REQUEST, LIKE_POST_REQUEST, UNLIKE_POST_REQUEST } from '../../reducers/post';
 
-import { FormGutter, CardWrapper, CardTop } from '../style/global';
-
-
-const CardButton = styled(Button)`
-    height: auto;
-    margin: 0;
-    padding: 0;
-    margin-right: 10px;
-    
-    & + p {
-        display: inline-block;
-        margin-bottom: 0;
-    }
-`;
+import { FormGutter, CardWrapper, CardTop, TimeStamp } from '../style/global';
+import { Global, CardButton } from './style';
 
 dayjs.locale('ko');
 dayjs.extend(relativeTime);
@@ -88,6 +76,7 @@ const PostCard = ({ post, images }) => {
 
     return (
         <>
+            <Global />
             <CardWrapper 
                 cover={post.Images[0] && <ImagesView images={post.Images} />}
             >
@@ -100,7 +89,7 @@ const PostCard = ({ post, images }) => {
                         )}
                         title={(
                             <Link href={`/user/${post.User.id}`}>
-                                <a>{post.User.nickname}</a>
+                                <a><b>{post.User.nickname}</b></a>
                             </Link>
                         )}
                     />
@@ -153,7 +142,7 @@ const PostCard = ({ post, images }) => {
                 <FormGutter>
                     <CardButton type="text"><Link href={`/user/${post.User.id}`}><a><b>{post.User.nickname}</b></a></Link></CardButton>
                     <PostCardContent postData={post.content} />
-                    <div>{dayjs(post.createdAt).locale('ko').fromNow()}</div>
+                    <TimeStamp>{dayjs(post.createdAt).locale('ko').fromNow()}</TimeStamp>
                 </FormGutter>
                 <FormGutter>
                     <CardButton type="text" onClick={onOpenDetailPost}><b>{post.Comments.length}개</b>의 댓글</CardButton>

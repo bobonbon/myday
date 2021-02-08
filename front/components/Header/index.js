@@ -1,49 +1,19 @@
 import React, { useCallback } from 'react';
-import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Menu, Input, Row, Col, Button, Dropdown } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import styled from 'styled-components';
 
-import UserProfile from './UserProfile';
-import PostForm from './PostForm';
-import LoginForm from './LoginForm';
-import { LOG_OUT_REQUEST } from '../reducers/user';
-import useInput from '../hooks/useInput';
+import { LOG_OUT_REQUEST } from '../../reducers/user';
+import useInput from '../../hooks/useInput';
 import Router from 'next/router';
 
-const GnbWrapper = styled.div`
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%; 
-    height: auto;
-    background-color: #fff;
-    border-bottom: 1px solid #dbdbdb;
-    z-index: 10;
-`;
+import { GnbWrapper, InstaLogo, HeaderItem } from './style';
 
-const HeaderItem = styled.li`
-    display: inline-block;
-    min-width: 100px;
-    padding: 10px 0;
-`;
-
-const BodyWrapper = styled.div`
-    max-width: 975px;
-    margin: 0 auto;
-    padding: 60px 20px;
-`;
-
-const ColPadding = styled(Col)`
-    padding: 20px;
-`;
-
-
-const AppLayout = ({ children }) => {
+const Header = ({ post }) => {
     const { me, logOutLoading } = useSelector((state) => state.user);
+    const id = useSelector((state) => state.user.me?.id);
     const dispatch = useDispatch();
     const [searchInput, onChangeSearchInput] = useInput('');
 
@@ -58,17 +28,17 @@ const AppLayout = ({ children }) => {
     }, []);
 
     return (
-        <div>
+        <>
             <GnbWrapper>
                 <ul className="wrapper">
                     <Row align="middle">
                         <Col span={8}>
                             <HeaderItem>
-                                <Link href="/"><a>메인</a></Link>
+                                <Link href="/"><a><InstaLogo /></a></Link>
                             </HeaderItem>
                         </Col>
                         <Col span={8}>
-                            <HeaderItem>
+                            <HeaderItem className="gnb-search">
                                 <Input.Search 
                                     allowClear 
                                     style={{ verticalAlign: 'middle' }} 
@@ -82,7 +52,7 @@ const AppLayout = ({ children }) => {
                         <Col span={8}>
                             {me 
                                 ? (
-                                    <HeaderItem>
+                                    <HeaderItem className="user-menu">
                                         <Dropdown  
                                             placement="bottomRight"
                                             trigger="click" 
@@ -107,7 +77,7 @@ const AppLayout = ({ children }) => {
                                     </HeaderItem>
                                 )
                                 : (
-                                    <HeaderItem>
+                                    <HeaderItem className="user-menu">
                                         <Link href="/signup"><a>회원가입</a></Link> 
                                     </HeaderItem>
                                 )
@@ -116,26 +86,8 @@ const AppLayout = ({ children }) => {
                     </Row>
                 </ul>
             </GnbWrapper>
-            <BodyWrapper>
-                <Row>
-                    <ColPadding xs={24} md={16}>
-                        {children}
-                    </ColPadding>
-                    <ColPadding xs={24} md={8}>
-                        {me 
-                            ? <PostForm />
-                            : <LoginForm />
-                        } 
-                    </ColPadding>
-                </Row>
-            </BodyWrapper>
-            
-        </div>
+        </>
     );
 };
 
-AppLayout.propTypes = {
-    children: PropTypes.node.isRequired,
-}
-
-export default AppLayout;
+export default Header;

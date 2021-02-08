@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import useSWR from 'swr';
 import axios from 'axios';
 
-import AppLayout from '../components/AppLayout';
+import SingleLayout from '../components/SingleLayout';
 import UserProfile from '../components/UserProfile';
 import ProfileEditForm from '../components/ProfileEditForm';
 import FollowList from '../components/FollowList';
@@ -63,12 +63,12 @@ const Profile = () => {
                 <meta charSet="utf-8" />
                 <title>내 프로필 | my day</title>
             </Head>
-            <AppLayout>
+            <SingleLayout>
                 <UserProfile />
                 <ProfileEditForm />
                 <FollowList header="팔로우" data={followingsData} onClickMore={loadMoreFollowings} loading={!followingsData && !followingError} />
                 <FollowList header="팔로워" data={followersData} onClickMore={loadMoreFollowers} loading={!followersData && !followerError} />
-            </AppLayout>
+            </SingleLayout>
         </>
     );
 }
