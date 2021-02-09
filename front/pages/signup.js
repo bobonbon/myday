@@ -19,7 +19,7 @@ const ErrorMessage = styled.div`
 
 const SIgnup = () => {
     const dispatch = useDispatch();
-    const { signUpLoading, signUpDone, signupError, me } = useSelector((state) => state.user);
+    const { signUpLoading, signUpDone, signUpError, me } = useSelector((state) => state.user);
 
     useEffect(() => {
         if (me && me.id) {
@@ -34,10 +34,10 @@ const SIgnup = () => {
     }, [signUpDone]);
 
     useEffect(() => {
-        if (signupError) {
-            alert(signupError);
+        if (signUpError) {
+            alert(signUpError);
         }
-    }, [signupError])
+    }, [signUpError])
     
     const [email, onChangeEmail] = useInput('');
     const [nickname, onChangeNickname] = useInput('');

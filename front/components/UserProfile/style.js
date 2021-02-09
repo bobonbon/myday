@@ -9,6 +9,6 @@ export const ProfileStyle = styled(Card)`
     }
 
     & .ant-card-actions {
-        position: absolute;
+        
     }
 `
