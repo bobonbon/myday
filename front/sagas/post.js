@@ -9,6 +9,7 @@ import {
     UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_SUCCESS, UPLOAD_IMAGES_FAILURE,
     REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS, REMOVE_POST_FAILURE,
     ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAILURE, 
+    REMOVE_COMMENT_REQUEST, REMOVE_COMMENT_SUCCESS, REMOVE_COMMENT_FAILURE,
     LIKE_POST_REQUEST, LIKE_POST_SUCCESS, LIKE_POST_FAILURE, 
     UNLIKE_POST_REQUEST, UNLIKE_POST_SUCCESS, UNLIKE_POST_FAILURE,
 } from '../reducers/post';
@@ -182,6 +183,26 @@ function* addComment(action) {
     }
 }
 
+function removeCommentAPI(data) {
+	return axios.delete(`/post/comment/${data}`); // DELETE /post/comment/1
+}
+
+function* removeComment(action) {
+    try {
+        const result = yield call(removeCommentAPI, action.data);
+        yield put({
+            type: REMOVE_COMMENT_SUCCESS,
+            data: result.data,   //성공결과
+        });
+    } catch (err) {
+        console.error(err);  
+        yield put({
+            type: REMOVE_COMMENT_FAILURE,
+            error: err.response.data, //실패 결과
+        })
+    }
+}
+
 function likePostAPI(data) {
 	return axios.patch(`/post/${data}/like`); // 데이터의 일부분만 수정하면 patch
 }
@@ -254,6 +275,10 @@ function* watchAddComment() {
     yield takeLatest(ADD_COMMENT_REQUEST, addComment);  
 }
 
+function* watchRemoveComment() {
+    yield takeLatest(REMOVE_COMMENT_REQUEST, removeComment);  
+}
+
 function* watchLikePost() {
     yield takeLatest(LIKE_POST_REQUEST, likePost);  
 }
@@ -275,6 +300,7 @@ export default function* postSaga() {
        fork(watchUploadImages), 
        fork(watchRemovePost), 
        fork(watchAddComment), 
+       fork(watchRemoveComment), 
        fork(watchLikePost), 
        fork(watchUnlikePost), 
     ]);

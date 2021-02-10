@@ -13,7 +13,7 @@ import { InputComment } from './style';
 const CommentForm = ({ post }) => {
     const dispatch = useDispatch();
     const id = useSelector((state) => state.user.me?.id);
-    const { addCommentDone } = useSelector((state) => state.post);
+    const { addCommentDone, addCommentError } = useSelector((state) => state.post);
     const [commentText, onChangeCommentText, setCommentText] = useInput('');
 
     useEffect(() => {
@@ -24,6 +24,11 @@ const CommentForm = ({ post }) => {
 
     const onSubmitComment = useCallback(() => {
         console.log(post.id, commentText);
+        
+        if (addCommentError) {
+            return alert(addCommentError);
+        }
+
         dispatch({
             type: ADD_COMMENT_REQUEST,
             data: { content: commentText, postId: post.id, userId: id },

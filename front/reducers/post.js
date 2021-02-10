@@ -23,6 +23,9 @@ export const initialState = {
     addCommentLoading: false,
     addCommentDone: false,
     addCommentError: null,
+    removeCommentLoading: false,
+    removeCommentDone: false,
+    removeCommentError: null,
     likePostLoading: false,
     likePostDone: false,
     likePostError: null,
@@ -48,7 +51,6 @@ export const LOAD_HASHTAG_POSTS_REQUEST = 'LOAD_HASHTAG_POSTS_REQUEST';
 export const LOAD_HASHTAG_POSTS_SUCCESS = 'LOAD_HASHTAG_POSTS_SUCCESS';
 export const LOAD_HASHTAG_POSTS_FAILURE = 'LOAD_HASHTAG_POSTS_FAILURE';
 
-
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
 export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
@@ -64,6 +66,10 @@ export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE';
 export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
 export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
 export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
+
+export const REMOVE_COMMENT_REQUEST = 'REMOVE_COMMENT_REQUEST';
+export const REMOVE_COMMENT_SUCCESS = 'REMOVE_COMMENT_SUCCESS';
+export const REMOVE_COMMENT_FAILURE = 'REMOVE_COMMENT_FAILURE';
 
 export const LIKE_POST_REQUEST = 'LIKE_POST_REQUEST';
 export const LIKE_POST_SUCCESS = 'LIKE_POST_SUCCESS';
@@ -184,6 +190,20 @@ const reducer = (state = initialState, action) => {
             case ADD_COMMENT_FAILURE:
                 draft.addCommentLoading = false;
                 draft.addCommentError = action.error;
+                break;
+            case REMOVE_COMMENT_REQUEST:
+                draft.removeCommentLoading = true;
+                draft.removeCommentDone = false;
+                draft.removeCommentError = null;
+                break;
+            case REMOVE_COMMENT_SUCCESS:
+                draft.removeCommentLoading = false;
+                draft.removeCommentDone = true;
+                draft.mainPosts = draft.mainPosts.filter((v) => v.id !== action.data.CommentId);
+                break;
+            case REMOVE_COMMENT_FAILURE:
+                draft.removeCommentLoading = false;
+                draft.removeCommentError = action.error;
                 break;
             case LIKE_POST_REQUEST:
                 draft.likePostLoading = true;

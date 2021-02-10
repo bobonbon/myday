@@ -1,25 +1,45 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/ko';
 
-import { Card, Avatar, List, Comment } from 'antd';
+import { Card, Avatar, List, Comment, Button } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 
 import ImagesView from '../imagesView';
 import CommentForm from '../CommentForm';
 import PostCardContent from '../PostCardContent';
 
+import { REMOVE_COMMENT_REQUEST } from '../../reducers/post';
+
 import { CardTop, TimeStamp } from '../style/global';
-import { DetailWrapper, CloseBtn, DetailCard, DetailRow, DetailColLeft, DetailColRight } from './style';
+import { DetailWrapper, CloseBtn, DetailCard, DetailRow, DetailColLeft, DetailColRight, DeleteComment } from './style';
 
 dayjs.locale('ko');
 dayjs.extend(relativeTime);
 
 const DetailPost = ({ images, post, onCloseDetailPost }) => {
     const id = useSelector((state) => state.post.id);
+    const userId = useSelector((state) => state.user.me?.id);
+    const { removeCommentError } = useSelector((state) => state.post)
+
+    useEffect(() => {
+        if (removeCommentError) {
+            return alert(removeCommentError)
+        }
+    }, [removeCommentError]);
+    
+    const dispatch = useDispatch();
+    const onDeleteComment = (id) => () => {
+        dispatch({
+            type: REMOVE_COMMENT_REQUEST,
+            data: id,
+        })
+    };
+
     return (
         <DetailWrapper>
             <CloseBtn onClick={onCloseDetailPost} />
@@ -70,7 +90,13 @@ const DetailPost = ({ images, post, onCloseDetailPost }) => {
                                                 <TimeStamp>{dayjs(item.createdAt).locale('ko').fromNow()}</TimeStamp>
                                             </p>
                                         )}
-                                    />
+                                    >
+                                        {userId && item.User.id === userId 
+                                            ? (<DeleteComment type="text" onClick={onDeleteComment(item.id)}><DeleteOutlined /></DeleteComment>)
+                                            : null
+                                        }
+                                        
+                                    </Comment>
                                 )}
                             />
                         </div>

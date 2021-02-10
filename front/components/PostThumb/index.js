@@ -85,7 +85,7 @@ const PostThumb = ({ post, images }) => {
                                 
                             ) 
                             : (
-                                <img src="http://placehold.it/300x300/333333/333333" />
+                                <img src="http://placehold.it/300x300/cccccc/cccccc" />
                             ) 
                         }
                     </ThumbItem>

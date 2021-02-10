@@ -60,6 +60,9 @@ const Header = ({ post }) => {
                                             arrow
                                             overlay={(
                                                 <Menu>
+                                                    <li>
+                                                        {me.nickname}
+                                                    </li>
                                                     <Menu.Item>
                                                         <Link href="/profile"><a>프로필</a></Link>
                                                     </Menu.Item>

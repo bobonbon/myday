@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Row, Col } from 'antd';
+import { Row, Col, Button } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 
 export const DetailWrapper = styled.div`
@@ -70,5 +70,17 @@ export const DetailColRight = styled(Col)`
     & .ant-comment-content-author-name a {
         color: #111;
         font-size: 14px;
+    }
+`;
+
+export const DeleteComment = styled(Button)`
+    position: absolute;
+    right: 0;
+    top: 13px;
+    color: #bdbdbd;
+    font-size: 14px;
+
+    &:hover {
+        background-color: transparent;
     }
 `;
