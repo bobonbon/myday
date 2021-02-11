@@ -21,7 +21,7 @@ import { DetailWrapper, CloseBtn, DetailCard, DetailRow, DetailColLeft, DetailCo
 dayjs.locale('ko');
 dayjs.extend(relativeTime);
 
-const DetailPost = ({ images, post, onCloseDetailPost }) => {
+const DetailPost = ({ images, post, comment, onCloseDetailPost }) => {
     const id = useSelector((state) => state.post.id);
     const userId = useSelector((state) => state.user.me?.id);
     const { removeCommentError } = useSelector((state) => state.post)
@@ -33,12 +33,14 @@ const DetailPost = ({ images, post, onCloseDetailPost }) => {
     }, [removeCommentError]);
     
     const dispatch = useDispatch();
-    const onDeleteComment = (id) => () => {
+    const onDeleteComment = useCallback((id) => () => {
+        console.log(post, post.id, post.Comments, id);
+
         dispatch({
             type: REMOVE_COMMENT_REQUEST,
             data: id,
         })
-    };
+    });
 
     return (
         <DetailWrapper>
@@ -71,8 +73,8 @@ const DetailPost = ({ images, post, onCloseDetailPost }) => {
                             <PostCardContent postData={post.content} />
                             
                             <List 
-                                dataSource={post.Comments}
-                                renderItem={(item) =>(
+                                dataSource={comment}
+                                renderItem={(item) => (
                                     <Comment
                                         avatar={(
                                             <Link href={`user/${item.User.id}`}>
@@ -91,12 +93,17 @@ const DetailPost = ({ images, post, onCloseDetailPost }) => {
                                             </p>
                                         )}
                                     >
+                                        
                                         {userId && item.User.id === userId 
-                                            ? (<DeleteComment type="text" onClick={onDeleteComment(item.id)}><DeleteOutlined /></DeleteComment>)
+                                            ? (
+                                                <DeleteComment type="text" onClick={onDeleteComment(item.id)}><DeleteOutlined /></DeleteComment>
+                                                )
+                                            
                                             : null
                                         }
                                         
                                     </Comment>
+                                    
                                 )}
                             />
                         </div>

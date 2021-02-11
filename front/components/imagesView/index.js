@@ -20,6 +20,7 @@ const ImagesView = ({ images }) => {
                 dots={true}
                 nextArrow={<RightOutlined />}
                 prevArrow={<LeftOutlined />}
+                adaptiveHeight={true}
             >
                 {images.map((v) => (
                     <SliderImageWrpper key={v.src}>

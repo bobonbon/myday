@@ -20,16 +20,18 @@ export const SliderImageWrpper = styled.div`
 `;
 
 export const Global = createGlobalStyle`
+    .slick-track {
+        height: 100%;
+    }
     .slick-track:after {
         display: block;
         clear: both;
         content: ""
     }
     .slick-slide {
-        display: block;
         overflow: hidden;
-        float: left;
         max-width: 100%;
+        height: 100%;
         vertical-align: middle;
     }
     .slick-arrow {

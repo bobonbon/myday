@@ -23,8 +23,6 @@ const CommentForm = ({ post }) => {
     }, [addCommentDone]);
 
     const onSubmitComment = useCallback(() => {
-        console.log(post.id, commentText);
-        
         if (addCommentError) {
             return alert(addCommentError);
         }
