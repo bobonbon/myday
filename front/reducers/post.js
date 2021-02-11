@@ -198,7 +198,7 @@ const reducer = (state = initialState, action) => {
                 break;
             case REMOVE_COMMENT_SUCCESS:
                 const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
-                post.Comments = post.Comments.filter((v) => v.id !== action.data);
+                post.Comments = post.Comments.filter((v) => v.id !== action.data.CommentId);
                 draft.removeCommentLoading = false;
                 draft.removeCommentDone = true;
                 //draft.mainPosts = draft.mainPosts.filter((v) => v.id !== action.data.CommentId);

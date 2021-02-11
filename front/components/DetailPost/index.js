@@ -38,7 +38,7 @@ const DetailPost = ({ images, post, comment, onCloseDetailPost }) => {
 
         dispatch({
             type: REMOVE_COMMENT_REQUEST,
-            data: id,
+            data: id,   //id
         })
     });
 

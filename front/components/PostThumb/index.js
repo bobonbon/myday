@@ -9,7 +9,7 @@ import 'dayjs/locale/ko';
 import { Card, Avatar, Button, Col, Modal, Menu } from 'antd';
 import { EllipsisOutlined, HeartFilled, HeartOutlined, MessageOutlined } from '@ant-design/icons'
 
-import DetailPost from '../DetailaPost';
+import DetailPost from '../DetailPost';
 import ImagesView from '../imagesView';
 import CommentForm from '../CommentForm/';
 import PostCardContent from '../PostCardContent';
