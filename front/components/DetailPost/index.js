@@ -21,7 +21,7 @@ import { DetailWrapper, CloseBtn, DetailCard, DetailRow, DetailColLeft, DetailCo
 dayjs.locale('ko');
 dayjs.extend(relativeTime);
 
-const DetailPost = ({ images, post, comment, onCloseDetailPost }) => {
+const DetailPost = ({ images, post, comments, onCloseDetailPost }) => {
     const id = useSelector((state) => state.post.id);
     const userId = useSelector((state) => state.user.me?.id);
     const { removeCommentError } = useSelector((state) => state.post)
@@ -38,7 +38,7 @@ const DetailPost = ({ images, post, comment, onCloseDetailPost }) => {
 
         dispatch({
             type: REMOVE_COMMENT_REQUEST,
-            data: id,   //id
+            data: { postId: post.id, commentId: id },
         })
     });
 
@@ -73,7 +73,7 @@ const DetailPost = ({ images, post, comment, onCloseDetailPost }) => {
                             <PostCardContent postData={post.content} />
                             
                             <List 
-                                dataSource={comment}
+                                dataSource={comments}
                                 renderItem={(item) => (
                                     <Comment
                                         avatar={(

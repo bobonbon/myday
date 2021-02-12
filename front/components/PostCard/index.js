@@ -22,7 +22,7 @@ import { Global, CardButton } from './style';
 dayjs.locale('ko');
 dayjs.extend(relativeTime);
 
-const PostCard = ({ post }) => {
+const PostCard = ({ post, images }) => {
     const dispatch = useDispatch();
     const id = useSelector((state) => state.user.me?.id);
     const { removePostLoading } = useSelector((state) => state.post)
@@ -145,10 +145,10 @@ const PostCard = ({ post }) => {
                 </FormGutter>
                 <FormGutter>
                     <CardButton type="text" onClick={onOpenDetailPost}><b>{post.Comments.length}개</b>의 댓글</CardButton>
-                    <CommentForm post={post.Comments} />
+                    <CommentForm post={post} />
                 </FormGutter>
             </CardWrapper>
-            {openDetailPost && <DetailPost post={post} images={post.Images} comment={post.Comments} onCloseDetailPost={onCloseDetailPost} />}
+            {openDetailPost && <DetailPost post={post} images={post.Images} comments={post.Comments} onCloseDetailPost={onCloseDetailPost} />}
         </>
     )
 }

@@ -21,7 +21,7 @@ const LoginForm = () => {
     }, [logInError])
 
     const onsubmitForm = useCallback(() => {
-        console.log(email, password);
+        //console.log(email, password);
         dispatch({
             type: LOG_IN_REQUEST,
             data: { email, password },

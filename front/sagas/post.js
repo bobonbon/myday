@@ -140,12 +140,14 @@ function* uploadImages(action) {
 }
 
 function removePostAPI(data) {
+    console.log('> APIdata', data);
 	return axios.delete(`/post/${data}`);
 }
 
 function* removePost(action) {
     try {
         const result = yield call(removePostAPI, action.data);
+        console.log('> actiondata', action.data);
         yield put({
             type: REMOVE_POST_SUCCESS,
             data: result.data,  
@@ -184,12 +186,14 @@ function* addComment(action) {
 }
 
 function removeCommentAPI(data) {
-	return axios.delete(`/post/comment/${data}`); // DELETE /post/comment/1
+    console.log('> APIdata', data);
+	return axios.delete(`/post/${data.postId}/comment/${data.commentId}`, data); // DELETE /post/comment/1
 }
 
 function* removeComment(action) {
     try {
         const result = yield call(removeCommentAPI, action.data);
+        console.log('> actiondata', action.data, action.data.postId, action.data.commentId);
         yield put({
             type: REMOVE_COMMENT_SUCCESS,
             data: result.data,   //성공결과
