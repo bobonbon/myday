@@ -1,38 +1,45 @@
 import styled, { createGlobalStyle } from 'styled-components';
 
 export const SliderWrapper = styled.div`
-    position: relative;
     overflow: hidden;
+    position: relative;
     width: 100%;
     height: 100%;
-    background-color: transparent;
+    background-color: transparent; 
+
+    & .slick-slider {
+        height: 100%;
+    }
+
+    & .slick-list {
+        height: 100% !important;
+        text-align: center;
+    }
+    
+    & .slick-track {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    & .slick-slide {
+        float: none;
+    }
 `;
 
 export const SliderImageWrpper = styled.div`
     text-align: center;
-
+    
     & img {
-        display: block;
         max-width: 100%;
         max-height: 500px;
-        margin: 0 auto;
     }
 `;
-
-export const Global = createGlobalStyle`
-    .slick-track {
-        height: 100%;
-    }
-    .slick-track:after {
-        display: block;
-        clear: both;
-        content: ""
-    }
-    .slick-slide {
-        overflow: hidden;
-        max-width: 100%;
-        height: 100%;
-        vertical-align: middle;
+    
+export const Global = createGlobalStyle` 
+    .ant-card-cover {
+        transform: none !important;
     }
     .slick-arrow {
         display: block;
