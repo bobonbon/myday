@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import Slick from 'react-slick';
+import { backUrl } from '../../config/config';
 import { RightOutlined, LeftOutlined, CloseOutlined } from '@ant-design/icons';
 
 import { REMOVE_IMAGE } from '../../reducers/post';
@@ -34,7 +35,7 @@ const PostImagesForm = ({ images }) => {
             >
                 {images.map((v, i) => (
                     <SliderImageWrpper key={v}>
-                        <img src={`http://localhost:3065/${v}`} alt={v} />
+                        <img src={`${backUrl}/${v}`} alt={v} />
                         <DeleteImage onClick={onRemoveImage(i)}>제거</DeleteImage>
                     </SliderImageWrpper>
                 ))}

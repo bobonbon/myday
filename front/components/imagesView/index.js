@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Slick from 'react-slick';
+import { backUrl } from '../../config/config';
 import { RightOutlined, LeftOutlined } from '@ant-design/icons';
 
 import { SliderWrapper, SliderImageWrpper, Global } from './style';
@@ -24,7 +25,7 @@ const ImagesView = ({ images }) => {
             >
                 {images.map((v) => (
                     <SliderImageWrpper key={v.src}>
-                        <img src={`http://localhost:3065/${v.src}`} alt={v.src} />
+                        <img src={`${backUrl}/${v.src}`} alt={v.src} />
                     </SliderImageWrpper>
                 ))}
             </Slick>

@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
+import { backUrl } from '../../config/config';
 import Link from 'next/link';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -75,14 +76,12 @@ const PostThumb = ({ post, images }) => {
 
     return (
         <>
-            <Link href={`http://localhost:3060/post/${post.id}`}>
+            <Link href={`/post/${post.id}`}>
                 <a>
                     <ThumbItem>
                         {post.Images[0] 
                             ? (
-                                
-                                    <img src={`http://localhost:3065/${post.Images[0].src}`} />
-                                
+                                <img src={`${backUrl}/${post.Images[0].src}`} />
                             ) 
                             : (
                                 <img src="http://placehold.it/300x300/cccccc/cccccc" />
