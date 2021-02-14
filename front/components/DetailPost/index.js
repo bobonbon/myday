@@ -47,10 +47,10 @@ const DetailPost = ({ images, post, comments, onCloseDetailPost }) => {
             <CloseBtn onClick={onCloseDetailPost} />
             <DetailCard>
                 <DetailRow>
-                    <DetailColLeft xs={14} md={14}>
+                    <DetailColLeft xs={24} md={14}>
                         <ImagesView images={images} />
                     </DetailColLeft>
-                    <DetailColRight xs={10} md={10}>
+                    <DetailColRight xs={24} md={10}>
                         <CardTop>
                             <Card.Meta 
                                 avatar={(

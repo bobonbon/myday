@@ -32,7 +32,14 @@ export const DetailCard = styled.div`
     min-width: 500px;
     height: 90vh;
     max-height: 500px;
-    background-color: #fff;
+    background-color: #000;
+
+    @media screen and (max-width: 974px) {
+        min-width: auto;
+        max-width: 460px;
+        height: 80vh;
+        max-height: 100%;
+    }
 `;
 
 export const DetailRow = styled(Row)`
@@ -43,10 +50,11 @@ export const DetailColLeft = styled(Col)`
     position: relative;
     max-width: 500px;
     height: 100%;
+    margin: 0 auto;
     background-color: #000;
-
-    & .slick-slider.slick-initialized {
-        
+    @media screen and (max-width: 974px) {
+        max-width: 100%;
+        height: auto;
     }
 `;
 
@@ -70,6 +78,11 @@ export const DetailColRight = styled(Col)`
     & .ant-comment-content-author-name a {
         color: #111;
         font-size: 14px;
+    }
+
+    @media screen and (max-width: 974px) {
+        max-width: 100%;
+        max-height: 300px;
     }
 `;
 
