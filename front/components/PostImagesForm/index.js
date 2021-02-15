@@ -35,7 +35,7 @@ const PostImagesForm = ({ images }) => {
             >
                 {images.map((v, i) => (
                     <SliderImageWrpper key={v}>
-                        <img src={`${backUrl}/${v}`} alt={v} />
+                        <img src={v} alt={v} />
                         <DeleteImage onClick={onRemoveImage(i)}>제거</DeleteImage>
                     </SliderImageWrpper>
                 ))}

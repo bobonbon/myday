@@ -81,7 +81,7 @@ const PostThumb = ({ post, images }) => {
                     <ThumbItem>
                         {post.Images[0] 
                             ? (
-                                <img src={`${backUrl}/${post.Images[0].src}`} />
+                                <img src={post.Images[0].src} />
                             ) 
                             : (
                                 <img src="http://placehold.it/300x300/cccccc/cccccc" />
