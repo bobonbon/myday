@@ -2,6 +2,8 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const multerS3 = require('multer-s3');
+const AWS = require('aws-sdk');
 
 const { Post, Image, User, Comment, Hashtag } = require('../models');
 const { isLoggedIn } = require('./middlewares');
@@ -17,16 +19,28 @@ try {
 }
 
 // multipart/form-data 를 위한 multer 라우터 세팅
+AWS.config.update({
+    accessKeyId: process.env.S3.ACCESS_KEY_ID,
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+    region: 'ap-northeast-2',
+});
 const upload = multer({
-    storage: multer.diskStorage({   // 배포 시에 변경 (s3)
-        destination(req, file, done) {
-            done(null, 'uploads');  // uploads 폴더에 저장해 둘것이니 폴더를 만들어야함
-        },
-        filename(req, file, done) {
-            const ext = path.extname(file.originalname);    // 확장자 추출(.png)
-            const basename = path.basename(file.originalname, ext); // 확장자를 뺀 이름
-            done(null, basename + '_' + new Date().getTime() + ext);
-        },
+    // storage: multer.diskStorage({   // 배포 시에 변경 (s3)
+    //     destination(req, file, done) {
+    //         done(null, 'uploads');  // uploads 폴더에 저장해 둘것이니 폴더를 만들어야함
+    //     },
+    //     filename(req, file, done) {
+    //         const ext = path.extname(file.originalname);    // 확장자 추출(.png)
+    //         const basename = path.basename(file.originalname, ext); // 확장자를 뺀 이름
+    //         done(null, basename + '_' + new Date().getTime() + ext);
+    //     },
+    // }),
+    storage: multerS3({
+        s3: new AWS.S3(),
+        bucket: 'bobonbongram-s3',
+        key(req, file, cb) {
+            cb(null, `original/${Date.now()}_${path.basename(file.originalname)}`)
+        }
     }),
     limits: { fileSize: 20 * 1024 * 1024 },
 });
@@ -119,7 +133,7 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {    // PO
 router.post('/images', isLoggedIn, upload.array('image'), async (req, res, next) => {
     try {
         console.log(req.files);
-        res.json(req.files.map((v) => v.filename));
+        res.json(req.files.map((v) => v.location));
     } catch (error) {
         console.error(error);
         next(error);
