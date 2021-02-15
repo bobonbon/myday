@@ -20,7 +20,7 @@ try {
 
 // multipart/form-data 를 위한 multer 라우터 세팅
 AWS.config.update({
-    accessKeyId: process.env.S3.ACCESS_KEY_ID,
+    accessKeyId: process.env.S3_ACCESS_KEY_ID,
     secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
     region: 'ap-northeast-2',
 });
