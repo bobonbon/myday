@@ -36,7 +36,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.use(cors({
-    origin: [true, 'bobonbon.xyz', 'http://52.79.93.22'],
+    origin: [true, 'http://bobonbon.xyz'],
     credentials: true,  // 쿠키를 같이 전달하고 싶다면 true
 }));
 //프론트에서 백으로 데이터 보낼 때
@@ -50,6 +50,11 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     secret: process.env.COOKIE_SECRET,
+    cookie: {
+        httpOnly: true,
+        secure: false,
+        domain: process.env.NODE_ENV === 'production' && '.bobonbon.xyz'
+    },
 }));
 app.use(passport.initialize());
 app.use(passport.session());
