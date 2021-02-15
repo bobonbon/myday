@@ -25,7 +25,7 @@ const ImagesView = ({ images }) => {
             >
                 {images.map((v) => (
                     <SliderImageWrpper key={v.src}>
-                        <img src={`${v.src.replace(/\/thumb\//, '/original/')}`} alt={v.src} />
+                        <img src={`${v.src}`} alt={v.src} />
                     </SliderImageWrpper>
                 ))}
             </Slick>
