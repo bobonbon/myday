@@ -82,12 +82,12 @@ const PostCard = ({ post, images }) => {
                 <CardTop>
                     <Card.Meta 
                         avatar={(
-                            <Link href={`/user/${post.User.id}`}>
+                            <Link href={`/user/${post.User.id}`} prefetch={false}>
                                 <a><Avatar>{post.User.nickname[0]}</Avatar></a>
                             </Link>
                         )}
                         title={(
-                            <Link href={`/user/${post.User.id}`}>
+                            <Link href={`/user/${post.User.id}`} prefetch={false}>
                                 <a><b>{post.User.nickname}</b></a>
                             </Link>
                         )}
@@ -139,7 +139,7 @@ const PostCard = ({ post, images }) => {
                     </Col>
                 </FormGutter>
                 <FormGutter>
-                    <CardButton type="text"><Link href={`/user/${post.User.id}`}><a><b>{post.User.nickname}</b></a></Link></CardButton>
+                    <CardButton type="text"><Link href={`/user/${post.User.id}`} prefetch={false}><a><b>{post.User.nickname}</b></a></Link></CardButton>
                     <PostCardContent postData={post.content} />
                     <TimeStamp>{dayjs(post.createdAt).locale('ko').fromNow()}</TimeStamp>
                 </FormGutter>
