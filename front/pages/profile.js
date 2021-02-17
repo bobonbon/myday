@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useDispatch, useSelector } from 'react-redux';
 import useSWR from 'swr';
 import axios from 'axios';
+import { backUrl } from '../config/config';
 
 import SingleLayout from '../components/SingleLayout';
 import UserProfile from '../components/UserProfile';
@@ -19,8 +20,8 @@ const Profile = () => {
     const [followersLimit, setFollowersLimit] = useState(3);
     const [followingsLimit, setFollowingsLimit] = useState(3);
 
-    const { data: followersData, error: followerError } = useSWR(`http://localhost:3065/user/followers?limit=${followersLimit}`, fetcher);
-    const { data: followingsData, error: followingError } = useSWR(`http://localhost:3065/user/followings?limit=${followingsLimit}`, fetcher);
+    const { data: followersData, error: followerError } = useSWR(`${backUrl}/user/followers?limit=${followersLimit}`, fetcher);
+    const { data: followingsData, error: followingError } = useSWR(`${backUrl}/user/followings?limit=${followingsLimit}`, fetcher);
 
     // useEffect(() => {
     //     dispatch({

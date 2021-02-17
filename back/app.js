@@ -36,7 +36,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.use(cors({
-    origin: [true, 'http://bobonbon.xyz'],
+    origin: [true, 'httpx://bobonbon.xyz'],
     credentials: true,  // 쿠키를 같이 전달하고 싶다면 true
 }));
 //프론트에서 백으로 데이터 보낼 때
