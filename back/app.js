@@ -28,6 +28,7 @@ db.sequelize.sync()
 passportConfig();
 
 if (process.env.NODE_ENV === 'production') {
+    app.enable('trust proxy');
     app.use(morgan('combined'));
     app.use(hpp());
     app.use(helmet());
@@ -36,7 +37,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.use(cors({
-    origin: [true, 'httpx://bobonbon.xyz'],
+    origin: [true, 'https://bobonbon.xyz'],
     credentials: true,  // 쿠키를 같이 전달하고 싶다면 true
 }));
 //프론트에서 백으로 데이터 보낼 때
@@ -52,7 +53,7 @@ app.use(session({
     secret: process.env.COOKIE_SECRET,
     cookie: {
         httpOnly: true,
-        secure: false,
+        secure: true,
         domain: process.env.NODE_ENV === 'production' && '.bobonbon.xyz'
     },
 }));
@@ -73,6 +74,6 @@ app.use('/post', postRouter);
 app.use('/user', userRouter);
 app.use('/hashtag', hashtagRouter);
 
-app.listen(80, () => {
+app.listen(3065, () => {
     console.log('서버 실행 중');
 });
