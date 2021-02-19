@@ -9,4 +9,13 @@ export const BodyWrapper = styled.div`
 
 export const ColPadding = styled(Col)`
     padding: 10px;
+
+    @media screen and (min-width: 768px){
+        &:first-of-type {
+            order: 1;
+        }
+        &:last-of-type {
+            order: 0;
+        }
+    }
 `;

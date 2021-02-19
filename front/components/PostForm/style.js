@@ -2,11 +2,16 @@ import styled from 'styled-components';
 import { Button } from 'antd';
 
 export const FormTitle = styled.p`
+    margin-bottom: 0;
     padding: 5px 0;
     text-indent: 10px;
     border-top: 1px solid #dbdbdb;
     border-bottom: 1px solid #dbdbdb;
 `
+export const PostFormCol = styled.div`
+    float: left;
+    min-width: 50%;
+`;
 
 export const AddImagesButton = styled(Button)`
     position: relative;

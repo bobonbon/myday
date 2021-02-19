@@ -18,14 +18,14 @@ const AppLayout = ({ children }) => {
             <Header />
             <BodyWrapper>
                 <Row>
-                    <ColPadding xs={24} md={16}>
-                        {children}
-                    </ColPadding>
                     <ColPadding xs={24} md={8}>
                         {me 
                             ? <PostForm />
                             : <LoginForm />
                         } 
+                    </ColPadding>
+                    <ColPadding xs={24} md={16}>
+                        {children}
                     </ColPadding>
                 </Row>
             </BodyWrapper>
