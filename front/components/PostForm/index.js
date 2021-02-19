@@ -3,10 +3,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import PostImagesForm from '../PostImagesForm';
 import useInput from '../../hooks/useInput';
 
-import { Button, Form, Input } from 'antd';
+import { Row, Button, Form, Input } from 'antd';
 import { FormGutter } from '../style/global';
 import { FileImageOutlined } from '@ant-design/icons';
-import { AddImagesButton, FormTitle, PostFormCol } from './style';
+import { AddImagesButton, FormTitle, PostFormWrap, PostFormCol, SubmitButton } from './style';
 
 import { addPost, UPLOAD_IMAGES_REQUEST, REMOVE_IMAGE, ADD_POST_REQUEST } from '../../reducers/post';
 
@@ -71,27 +71,27 @@ const PostForm = () => {
         <>
             <Form style={{ margin: '10px 0' }} encType="multipart/form-data" onFinish={onSubmit}>
                 <FormTitle>새 게시글 작성</FormTitle>
-                <PostFormCol>
-                    {imagePaths.length === 0 && 
-                        <AddImagesButton onClick={onClickImageUpload} alt="이미지 업로드" title="이미지 업로드">
-                            <FileImageOutlined />
-                        </AddImagesButton>
-                    }
-                    <PostImagesForm images={imagePaths} />
-                    <input type="file" name="image" multiple hidden ref={imageInput} onChange={onChangeImages} />
-                </PostFormCol>
-                <PostFormCol>
-                    <FormGutter>
-                    <Input.TextArea 
-                        value={text} 
-                        onChange={onChangeText} 
-                        placeholder="오늘의 기록을 남겨보세요." 
-                    />
-                    </FormGutter>
-                    <FormGutter>
-                        <Button type="primary" style={{ float: 'right' }} htmlType="submit" loading={addPostLoading}>작성</Button>
-                    </FormGutter>
-                </PostFormCol>
+                <PostFormWrap>
+                    <PostFormCol>
+                        {imagePaths.length === 0 && 
+                            <AddImagesButton onClick={onClickImageUpload} alt="이미지 업로드" title="이미지 업로드">
+                                <FileImageOutlined />
+                            </AddImagesButton>
+                        }
+                        <PostImagesForm images={imagePaths} />
+                        <input type="file" name="image" multiple hidden ref={imageInput} onChange={onChangeImages} />
+                    </PostFormCol>
+                    <PostFormCol>
+                        <FormGutter>
+                        <Input.TextArea 
+                            value={text} 
+                            onChange={onChangeText} 
+                            placeholder="오늘의 끄적끄적" 
+                        />
+                        </FormGutter>
+                    </PostFormCol>
+                    <SubmitButton type="primary" htmlType="submit" loading={addPostLoading}>작성</SubmitButton>
+                </PostFormWrap>
                 {/* <FormGutter>
                     {imagePaths.map((v, i) => (
                         <div key={v} style={{ display: 'inline-block', position: 'relative' }}>
