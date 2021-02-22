@@ -6,6 +6,7 @@ import {
     LOAD_USER_POSTS_REQUEST, LOAD_USER_POSTS_SUCCESS, LOAD_USER_POSTS_FAILURE, 
     LOAD_HASHTAG_POSTS_REQUEST, LOAD_HASHTAG_POSTS_SUCCESS, LOAD_HASHTAG_POSTS_FAILURE,
     ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE, 
+    UPDATE_POST_REQUEST, UPDATE_POST_SUCCESS, UPDATE_POST_FAILURE,
     UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_SUCCESS, UPLOAD_IMAGES_FAILURE,
     REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS, REMOVE_POST_FAILURE,
     ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAILURE, 
@@ -114,6 +115,26 @@ function* addPost(action) {
         console.error(err);
         yield put({
             type: ADD_POST_FAILURE,
+            error: err.response.data,
+        });
+    }
+}
+
+function updatePostAPI(data) {
+	return axios.patch(`/post/${data.PostId}`, data);
+}
+
+function* updatePost(action) {
+    try {
+        const result = yield call(updatePostAPI, action.data);
+        yield put({
+            type: UPDATE_POST_SUCCESS,
+            data: result.data,
+        });
+    } catch (err) {
+        console.error(err);
+        yield put({
+            type: UPDATE_POST_FAILURE,
             error: err.response.data,
         });
     }
@@ -267,6 +288,10 @@ function* watchAddPost() {
     yield takeLatest(ADD_POST_REQUEST, addPost);  
 }
 
+function* watchUpdatePost() {
+    yield takeLatest(UPDATE_POST_REQUEST, updatePost);  
+}
+
 function* watchUploadImages() {
     yield takeLatest(UPLOAD_IMAGES_REQUEST, uploadImages);  
 }
@@ -301,6 +326,7 @@ export default function* postSaga() {
        fork(watchLoadUserPosts), 
        fork(watchLoadHashtagPosts), 
        fork(watchAddPost), 
+       fork(watchUpdatePost), 
        fork(watchUploadImages), 
        fork(watchRemovePost), 
        fork(watchAddComment), 
