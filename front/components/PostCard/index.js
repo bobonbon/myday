@@ -14,7 +14,7 @@ import ImagesView from '../imagesView';
 import CommentForm from '../CommentForm/';
 import PostCardContent from '../PostCardContent';
 import FollowButton from '../FollowButton';
-import { REMOVE_POST_REQUEST, LIKE_POST_REQUEST, UNLIKE_POST_REQUEST } from '../../reducers/post';
+import { REMOVE_POST_REQUEST, LIKE_POST_REQUEST, UNLIKE_POST_REQUEST, UPDATE_POST_REQUEST } from '../../reducers/post';
 
 import { FormGutter, CardWrapper, CardTop, TimeStamp } from '../style/global';
 import { Global, CardButton } from './style';
@@ -25,7 +25,7 @@ dayjs.extend(relativeTime);
 const PostCard = ({ post, images }) => {
     const dispatch = useDispatch();
     const id = useSelector((state) => state.user.me?.id);
-    const { removePostLoading } = useSelector((state) => state.post)
+    const { removePostLoading } = useSelector((state) => state.post);
     //const id = me?.id;   // === me && me.id;    optional chaning
     
     const liked = post.Likers.find((v) => v.id === id); // 게시글 좋아한 사람 중에 내가 있는가
@@ -47,14 +47,34 @@ const PostCard = ({ post, images }) => {
             data: post.id,
         })
     }, []);
-
+    
     const [openDetailPost, setOpenDetailPost] = useState(false);
     const onOpenDetailPost = useCallback(() => {
         setOpenDetailPost(true);
     }, []);
     const onCloseDetailPost = useCallback(() => {
         setOpenDetailPost(false);
-    }, [])
+    }, []);
+    
+    const [editMode, setEditMode] = useState(false);
+    const onClickUpdate = useCallback(() => {
+        setEditMode(true);
+        setIsModalVisible(false);
+    }, []);
+
+    const onCancelUpdatePost = useCallback(() => {
+        setEditMode(false);
+    }, []);
+
+    const onChangePost = useCallback((editText) => () => {
+        dispatch({
+            type: UPDATE_POST_REQUEST,
+            data: {
+                PostId: post.id,
+                content: editText,
+            }
+        });
+    }, [post]);
 
     //antd modal
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -108,7 +128,7 @@ const PostCard = ({ post, images }) => {
                                 ? (
                                     <>
                                         <Menu.Item>
-                                            <Button type="text">수정</Button>
+                                            <Button type="text" onClick={onClickUpdate}>수정</Button>
                                         </Menu.Item>
                                         <Menu.Item>
                                             <Button danger type="text" onClick={onRemovePost} loading={removePostLoading}>삭제</Button>
@@ -140,7 +160,12 @@ const PostCard = ({ post, images }) => {
                 </FormGutter>
                 <FormGutter>
                     <CardButton type="text"><Link href={`/user/${post.User.id}`} prefetch={false}><a><b>{post.User.nickname}</b></a></Link></CardButton>
-                    <PostCardContent postData={post.content} />
+                    <PostCardContent 
+                        editMode={editMode} 
+                        postData={post.content} 
+                        onChangePost={onChangePost} 
+                        onCancelUpdatePost={onCancelUpdatePost} 
+                    />
                     <TimeStamp>{dayjs(post.createdAt).locale('ko').fromNow()}</TimeStamp>
                 </FormGutter>
                 <FormGutter>
