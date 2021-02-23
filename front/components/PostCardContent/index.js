@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { Input, Button } from 'antd'
 import { useSelector } from 'react-redux';
+import { FormPadding, FormGutter } from '../style/global';
 
 const PostCardContent = ({ postData, editMode, onChangePost, onCancelUpdatePost }) => {
     const [editText, setEditText] = useState(postData);
+    const id = useSelector((state) => state.user.me?.id);
     const { updatePostLoading, updatePostDone } = useSelector((state) => state.post);
 
     useEffect(() => {
@@ -20,15 +22,15 @@ const PostCardContent = ({ postData, editMode, onChangePost, onCancelUpdatePost 
 
     return (
         <span>
-            {editMode 
+            {id && editMode 
                 ? (
-                    <div>
+                    <FormPadding>
                         <Input.TextArea value={editText} onChange={onChangeText} />
-                        <Button.Group>
-                            <Button onClick={onCancelUpdatePost}>취소</Button>
-                            <Button type="primary" loading={updatePostLoading} onClick={onChangePost(editText)}>수정</Button>
-                        </Button.Group>
-                    </div>
+                        <FormGutter style={{ textAlign: 'right' }}>
+                                <Button onClick={onCancelUpdatePost} style={{ marginRight: '10px' }}>취소</Button>
+                                <Button type="primary" loading={updatePostLoading} onClick={onChangePost(editText)}>수정</Button>
+                        </FormGutter>
+                    </FormPadding>
                 )
                 : (
                     postData.split(/(#[^\s#]+)/g).map((v, i) => {

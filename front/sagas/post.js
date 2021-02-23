@@ -121,7 +121,8 @@ function* addPost(action) {
 }
 
 function updatePostAPI(data) {
-	return axios.patch(`/post/${data.PostId}`, data);
+    console.log('> APIdata', data);
+    return axios.patch(`/post/${data.PostId}`, data);
 }
 
 function* updatePost(action) {
@@ -161,14 +162,14 @@ function* uploadImages(action) {
 }
 
 function removePostAPI(data) {
-    console.log('> APIdata', data);
+    //console.log('> APIdata', data);
 	return axios.delete(`/post/${data}`);
 }
 
 function* removePost(action) {
     try {
         const result = yield call(removePostAPI, action.data);
-        console.log('> actiondata', action.data);
+        //console.log('> actiondata', action.data);
         yield put({
             type: REMOVE_POST_SUCCESS,
             data: result.data,  

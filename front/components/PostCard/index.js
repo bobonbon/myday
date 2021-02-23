@@ -72,9 +72,9 @@ const PostCard = ({ post, images }) => {
             data: {
                 PostId: post.id,
                 content: editText,
-            }
+            },
         });
-    }, [post]);
+    }, []);
 
     //antd modal
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -162,9 +162,9 @@ const PostCard = ({ post, images }) => {
                     <CardButton type="text"><Link href={`/user/${post.User.id}`} prefetch={false}><a><b>{post.User.nickname}</b></a></Link></CardButton>
                     <PostCardContent 
                         editMode={editMode} 
-                        postData={post.content} 
                         onChangePost={onChangePost} 
                         onCancelUpdatePost={onCancelUpdatePost} 
+                        postData={post.content} 
                     />
                     <TimeStamp>{dayjs(post.createdAt).locale('ko').fromNow()}</TimeStamp>
                 </FormGutter>
