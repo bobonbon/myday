@@ -169,6 +169,7 @@ router.post('/:postId/comment', isLoggedIn, async (req, res, next) => { // POST 
 // 댓글 삭제
 router.delete('/:postId/comment/:commentId', isLoggedIn, async (req, res, next) => {    //DELETE /post/comment/1
     try {
+        console.log('으아아아아ㅏ');
         const comment = await Comment.findOne({
             where: { 
                 id: req.params.commentId,
@@ -227,28 +228,29 @@ router.delete('/:postId/like', isLoggedIn, async (req, res, next) => {
 });
 
 // 게시글 수정
-router.patch('/:postId', isLoggedIn, async (req, res, next) => {
+router.patch('/:postId', isLoggedIn, async (req, res, next) => { // PATCH /post/10
     const hashtags = req.body.content.match(/#[^\s#]+/g);
     try {
+        console.log('>>>>>>>>시작!!!!');
         await Post.update({
-            content: req.body.content,
-        }, { 
-            where: { 
-                id: req.params.postId,
-                UserId: req.user.id,
+            content: req.body.content
+        }, {
+            where: {
+            id: req.params.postId,
+            UserId: req.user.id,
             },
         });
-        const post = await Post.fineOne({ where: {id: req.params.postId} });
+        const post = await Post.findOne({ where: { id: req.params.postId }});
         if (hashtags) {
-            const result = await Promise.all(hashtags.map((tag) => Hashtag.findOrCreate({ 
-                where: { name: tag.slice(1).toLowerCase() },
-            })));
+            const result = await Promise.all(hashtags.map((tag) => Hashtag.findOrCreate({
+            where: { name: tag.slice(1).toLowerCase() },
+            }))); // [[노드, true], [리액트, true]]
             await post.setHashtags(result.map((v) => v[0]));
         }
-        res.json({ PostId: parseInt(req.params.postId, 10), content: req.body.content });
+        res.status(200).json({ PostId: parseInt(req.params.postId, 10), content: req.body.content });
     } catch (error) {
         console.error(error);
-        next(error)
+        next(error);
     }
 });
 
